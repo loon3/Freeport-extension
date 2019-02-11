@@ -1,0 +1,292 @@
+//chrome.storage.local.set({key: value}, function() {
+//          console.log('Value is set to ' + value);
+//        });
+//      
+//        chrome.storage.local.get(['key'], function(result) {
+//          console.log('Value currently is ' + result.key);
+//        });
+
+function newPassphrase()
+{    
+    m = new Mnemonic(128);
+    m.toWords();
+    var str = m.toWords().toString();
+    var res = str.replace(/,/gi, " ");
+    var phraseList = res; 
+    
+    return phraseList
+}
+
+function encryptPassphrase(passphrase, password)
+{   
+    var encrypted = CryptoJS.AES.encrypt(passphrase, password);
+    return encrypted
+}
+
+function decryptPassphrase(passphrase_encrypted, password) 
+{           
+    var passphrase_decrypted = CryptoJS.AES.decrypt(passphrase_encrypted, password); 
+    var passphrase_decrypted_text = false
+    
+    try {
+        passphrase_decrypted_text = passphrase_decrypted.toString(CryptoJS.enc.Utf8);
+    }
+    catch(err) {
+        console.log(err.message);
+    }
+
+    //check if correct password
+    if (passphrase_decrypted_text) {            
+        var results = {status:"success", passphrase: passphrase_decrypted_text}
+    } else {
+        var results = {status:"error", passphrase: ""}
+    }
+    
+    return results   
+}
+
+
+function checkPassphrase()
+{
+     
+    chrome.storage.local.get(['passphrase'], function(result) {
+        
+        if(!result.passphrase){
+        
+            var mnemonic = newPassphrase()    
+            var selectManual = false
+
+            var passphraseDialogInit = new BootstrapDialog({
+                title: 'Welcome to Freeport',
+                cssClass: 'modal-nofade',
+                closable: false,
+                message: function(dialog){
+                    var $message = $('<div></div>').load('../html/modal/dialog-passphrase-new.html', function(){
+                        $(this).find("#dialogPassphraseNew-passphrase").html(mnemonic)
+                    })
+
+                    return $message
+                },
+
+                buttons: [{
+                    label: "Continue",
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself){
+                        
+                        if(selectManual){
+                            mnemonic = dialogItself.getModalBody().find('input').val()
+                        }
+                        
+                        passphraseDialogEncrypt.open()
+                        dialogItself.close();
+                    }
+                },
+                {
+                    id: 'manual-btn',
+                    label: 'Enter Existing Passphrase',
+                    cssClass: 'btn-secondary',
+                    action: function(dialogItself){
+                        
+                        selectManual = true
+
+                        $message = $('<div></div>').load('../html/modal/dialog-passphrase-manual.html')
+                        
+                        passphraseDialogInit.setMessage($message);
+                            
+                        var $button = this; 
+                        $button.hide();
+
+                    }
+                }
+                ]
+            });
+
+            var passphraseDialogEncrypt = new BootstrapDialog({
+                title: 'Enter New Collection Password',
+                cssClass: 'modal-nofade',
+                closable: false,
+                message: $('<div></div>').load('../html/modal/dialog-aes-new.html'),
+                buttons: [{
+                    label: 'Encrypt and Continue',
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself) {
+                        var password = dialogItself.getModalBody().find("#password-first").val();
+                        var password_check = dialogItself.getModalBody().find("#password-second").val();
+                        if(password.length > 0 && password == password_check){
+                            var passphrase_encrypted = encryptPassphrase(mnemonic, password)
+                            chrome.storage.local.set({passphrase: passphrase_encrypted}, function() {
+                                initInventory(mnemonic)
+                                dialogItself.close()
+                            });
+                        }
+
+                    }
+                }]
+            });
+
+            passphraseDialogInit.open();
+
+        } else {
+
+            unlockInventory()
+
+        }
+    
+    
+    });
+    
+
+    
+
+    
+}  
+
+
+function unlockInventory(){
+    var checkUnlocked = $("#body").data("passphrase")
+    
+    if(checkUnlocked == null){
+        var passphraseDialogDecrypt = new BootstrapDialog({
+            title: 'Enter Password',
+            cssClass: 'modal-nofade',
+            closable: false,
+            message: $('<div></div>').load('../html/modal/dialog-aes.html'),
+            buttons: [
+                {
+                    id: 'decrypt-passphrase-btn',
+                    label: 'Unlock Collection',
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself) { 
+                        var password = dialogItself.getModalBody().find('input').val()
+
+                        if(password.length > 0){
+                            chrome.storage.local.get(['passphrase'], function(result) {
+                                if(result.passphrase){
+                                    var passphrase = localStorage.getItem("mnemonic")          
+
+                                    var passphrase_decrypted = decryptPassphrase(result.passphrase, password)
+
+                                    if(passphrase_decrypted.status == "success"){   
+                                        chrome.storage.local.get(['address'], function(result) {
+                                            //console.log(result)
+                                            if(!result.address){
+                                                initInventory(passphrase_decrypted.passphrase)     
+                                            } else {
+                                                //console.log(result.address)
+                                                initInventory(passphrase_decrypted.passphrase, result.address)
+                                            }
+                                        })
+                                    } else {
+                                        console.log("wrong password!")
+                                        BootstrapDialog.show({
+                                            title: 'Wrong Password',
+                                            message: 'Freeport will close.',
+                                            closable: false,
+                                            buttons: [{
+                                                label: 'OK',
+                                                action: function(dialogRef){
+                                                    chrome.tabs.getCurrent(function(tab) {
+                                                        chrome.tabs.remove(tab.id, function() { });
+                                                    });
+                                                }
+                                            }]
+                                        });
+
+                                    }
+
+                                    dialogItself.close()
+
+                                }
+                            })
+                        }
+                    }
+                },
+                {
+                    label: 'Reset',
+                    cssClass: 'btn-secondary',
+                    action: function(dialogItself) {  
+                        resetInventoryModal()
+                    }
+                }
+            ]
+        });
+        passphraseDialogDecrypt.open()
+    } else {
+        $("#body").css("display","inline")
+        gotoTab("collect")
+    }
+   
+}
+
+function initInventory(passphrase, address){
+    
+    var appManifest = chrome.runtime.getManifest()
+    
+    $("#app-version").html("v"+appManifest.version)
+    
+    $("#body").css("display","inline")
+    $("#body").data("passphrase", passphrase)  
+    
+    if(!address){
+        var address = getAddressPassphrase(passphrase, 0)
+    }
+    $("#body").data("address", address)
+    $("#header-address").html(address)
+     
+    chrome.storage.local.set({'address': address}, function() {
+    
+        $(".jumbotron-tab-container").hide()
+        $(".jumbotron-tab-container-content").hide()
+        $("#page-container-collect-content").show()
+
+        $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
+
+        getFeeUpdate(function(fee, feeRecommended){
+            getAddressBalance(address, function(data){
+                var balance = parseInt(data.balance) / 100000000
+
+                $("#body").data("balance_btc", data.balance)
+                $("#body").data("fee_btc", fee)
+                $("#body").data("fee_btc_recommended", feeRecommended)
+
+                $("#header-balance-btc").html(balance)
+
+                buttonSplash()
+
+                //startWebsocket(address, BC_API_TOKEN)
+
+                //refresh after 5 min idle
+                idleCheck()
+            })
+        })
+        
+    })
+    
+}
+
+function resetInventoryModal(){
+    BootstrapDialog.show({
+        title: 'WARNING!',
+        message: 'Are you sure you want to reset? You will need your 12-word passphrase to recover your collection. Freeport will close after reset.',
+        closable: false,
+        buttons: [{
+            cssClass: "btn-secondary",
+            label: "No, I don't want to reset.",
+            action: function(dialogRef){
+                dialogRef.close()
+            }
+        },
+        {
+            cssClass: "btn-danger",
+            label: "Yes, I'm sure.",
+            action: function(dialogRef){
+                chrome.storage.local.clear()
+                chrome.tabs.getCurrent(function(tab) {
+                    chrome.tabs.remove(tab.id, function() { });
+                });
+            }
+        }
+        ]
+    });
+}
+
