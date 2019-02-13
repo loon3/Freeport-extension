@@ -27,8 +27,7 @@
    ],
    "permissions": [
         "tabs",
-        "storage",
-        "http://localhost/"
+        "storage"
    ],
    "manifest_version": 2,
    "name": "Freeport",
