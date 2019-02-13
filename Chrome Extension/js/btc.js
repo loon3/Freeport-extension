@@ -520,69 +520,6 @@ function sendBTC_test(add_from, add_to, sendtotal, transfee, mnemonic, callback)
 
 }
 
-
-function sendBTC_test_old(add_from, add_to, sendtotal, transfee, mnemonic, callback) {
-    
-    var amountremaining = ((parseFloat(sendtotal) * 100000000) + (parseFloat(transfee)*100000000))/100000000;
-        
-    getutxos(add_from, mnemonic, amountremaining, function(total_utxo, satoshi_change){ 
-        
-        if(total_utxo.length == 0){callback("error")}  
-    
-        var sendtotal_satoshis = parseFloat(sendtotal).toFixed(8) * 100000000  
-        sendtotal_satoshis = Math.round(sendtotal_satoshis)
-        
-        var transaction = new bitcore.Transaction()
-        
-        var feeSatoshis = parseInt(transfee * 100000000)
-            
-        console.log(feeSatoshis)
-            
-   
-        //bitcore
-        var transaction = new bitcore.Transaction().fee(feeSatoshis);
-        //rarest
-        var tx = new rarest.bitcoin.TransactionBuilder(NETWORK_BJS);    
-            
-           
-        //inputs
-        for (i = 0; i < total_utxo.length; i++) {
-            //bitcore
-            transaction.from(total_utxo[i]);    
-            //rarest
-            tx.addInput(total_utxo[i].txid, total_utxo[i].vout)
-        }
-        console.log(total_utxo);
-        
-        //bitcore
-        transaction.to(add_to, sendtotal_satoshis)
-        //rarest
-        tx.addOutput(add_to, sendtotal_satoshis)
-            
-        if (satoshi_change > 5459) {
-            transaction.change(add_from);
-            tx.addOutput(add_from, satoshi_change)
-        }
-        
-        
-        var privkey = getprivkey(add_from, mnemonic) 
-        transaction.sign(privkey)
-        
-        var key = rarest.bitcoin.ECPair.fromWIF(privkey, NETWORK_BJS);
-        tx.sign(0, key);
-        
-        
-        var final_trans_rarest = tx.build().toHex();
-        var final_trans_bitcore = transaction.uncheckedSerialize()
-        
-        console.log(final_trans_rarest)
-        console.log(final_trans_bitcore)
-        
-        callback(final_trans_rarest)
-    });
-       
-}
-
 function createOrder_opreturn_test(add_from, sell_asset, sell_asset_div, sell_qty, buy_asset, buy_asset_div, buy_qty, expiration, transfee, mnemonic, callback) {
     
     console.log(sell_qty)
@@ -666,5 +603,3 @@ function createOrder_opreturn_test(add_from, sell_asset, sell_asset_div, sell_qt
     });
     
 }
-
-//--- still needs work ---
