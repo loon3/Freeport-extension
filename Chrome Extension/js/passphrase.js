@@ -254,6 +254,9 @@ function initInventory(passphrase, address){
                 buttonSplash()
 
                 //startWebsocket(address, BC_API_TOKEN)
+                getUnconfirmed(address, function(data){
+                    updateUnconfirmed(data)
+                })
 
                 //refresh after 5 min idle
                 idleCheck()
@@ -264,29 +267,5 @@ function initInventory(passphrase, address){
     
 }
 
-function resetInventoryModal(){
-    BootstrapDialog.show({
-        title: 'WARNING!',
-        message: 'Are you sure you want to reset? You will need your 12-word passphrase to recover your collection. Freeport will close after reset.',
-        closable: false,
-        buttons: [{
-            cssClass: "btn-secondary",
-            label: "No, I don't want to reset.",
-            action: function(dialogRef){
-                dialogRef.close()
-            }
-        },
-        {
-            cssClass: "btn-danger",
-            label: "Yes, I'm sure.",
-            action: function(dialogRef){
-                chrome.storage.local.clear()
-                chrome.tabs.getCurrent(function(tab) {
-                    chrome.tabs.remove(tab.id, function() { });
-                });
-            }
-        }
-        ]
-    });
-}
+
 

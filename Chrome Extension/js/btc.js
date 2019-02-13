@@ -291,7 +291,7 @@ function getUnconfirmed(address, callback){
 
             }).error(function() { callback(0) })
         
-        }, 2000)
+        }, 1000)
 }
 
 
@@ -302,10 +302,10 @@ function getUnconfirmedXCP(address, txDataBTC, callback){
 
     $.getJSON( source_html, function( data ) { 
 
-        console.log(data)
+       // console.log(data)
         
         var btc_txs = Object.keys(txDataBTC)
-        console.log(btc_txs)
+        //console.log(btc_txs)
         var txs_parsed = new Array()
         var xcp_tx_hashes = new Array()
         var xcp_txs = data.data
@@ -325,8 +325,8 @@ function getUnconfirmedXCP(address, txDataBTC, callback){
         
         var remaining_txs = btc_txs.diff(xcp_tx_hashes)
         
-        for(var j=0; j < remaining_txs.length; j++){
-            txs_parsed.push({data: txDataBTC[btc_txs[j]], txid: btc_txs[j], txtype: "BTC"}) 
+        for(var i=0; i < remaining_txs.length; i++){
+            txs_parsed.push({data: txDataBTC[remaining_txs[i]], txid: remaining_txs[i], txtype: "BTC"}) 
         }
         
         callback({data: txs_parsed, count: txs_parsed.length})
@@ -352,6 +352,8 @@ function updateUnconfirmed_test(){
 }
 
 function updateUnconfirmed(data){
+    
+    var address = $("#body").data("address")
     
     //load unconfirmed
     $("#unconfirmed-tx-dropdown-count").html(data.count)
@@ -429,6 +431,30 @@ function updateUnconfirmed(data){
             
         } else if(data.data[i].txtype == "BTC"){
             
+            //console.log(data)
+            
+            txDisplay += "<div class='row' style='font-size: 12px'>"
+            txDisplay += "<div class='col-3' style='font-weight: bold;'>Sent/Received:</div><div class='col-9' style='text-align: left;'>BTC</div>"
+            txDisplay += "</div>"
+            
+//            txDisplay += "<div class='row' style='margin-bottom: 5px; font-size: 12px;'>"
+//            txDisplay += "<div class='col-3' style='font-weight: bold;'>Amount:</div><div class='col-9' style='text-align: left;'>"+data.data[i].data.quantity+"</div>"
+//            txDisplay += "</div>"  
+//            txDisplay += "<div class='row' style='font-size: 12px; margin-bottom: 5px;'>"
+//            
+//            if(isSend){
+//                txDisplay += "<div class='col-3' style='font-weight: bold;'>Sent To:</div><div class='col-9' style='text-align: left; vertical-align: bottom;'>"+data.data[i].data.destination+"</div>"
+//            } else {
+//                txDisplay += "<div class='col-3' style='font-weight: bold;'>Received From:</div><div class='col-9' style='text-align: left; vertical-align: bottom;'>"+data.data[i].data.source+"</div>"
+//            }
+//            
+//            txDisplay += "</div>" 
+            txDisplay += "<div class='row' style='font-size: 12px'>"
+            txDisplay += "<div class='col-3' style='font-weight: bold;'>TX ID:</div><div class='col-9' style='text-align: left;'>"+(data.data[i].txid).slice(0, 32)+"...</div>"
+            txDisplay += "</div>"
+            txDisplay += "</div>" 
+            txDisplay += "</button>"             
+            
         } else {
             
         }
@@ -436,9 +462,14 @@ function updateUnconfirmed(data){
     }
     
     txDisplay += "</div>"
+    
+    if(data.count == 0){
+        txDisplay = '<button class="dropdown-item unconfirmed-tx-dropdown-item" type="button" style="text-align: center; color: #fff" disabled>No unconfirmed transactions</button>'
+    }
 
     $("#unconfirmed-tx-dropdown").html(txDisplay)
     
+
     
     
 }

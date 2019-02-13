@@ -26,7 +26,7 @@ function selectAddrDropdown(address, addressArray){
         id: 'address-select-modal',
         title: 'Select Address',
         cssClass: 'modal-nofade',
-        closable: false,
+        closable: true,
         message: function(dialog){
                     var $message = $('<div></div>').load('../html/modal/dialog-settings-address.html', function(){
                         
@@ -77,3 +77,28 @@ function viewPassphraseModal(){
   
 }
 
+function resetInventoryModal(){
+    BootstrapDialog.show({
+        title: 'WARNING!',
+        message: 'Are you sure you want to reset? You will need your 12-word passphrase to recover your collection. Freeport will close after reset.',
+        closable: true,
+        buttons: [{
+            cssClass: "btn-secondary",
+            label: "No, I don't want to reset.",
+            action: function(dialogRef){
+                dialogRef.close()
+            }
+        },
+        {
+            cssClass: "btn-danger",
+            label: "Yes, I'm sure.",
+            action: function(dialogRef){
+                chrome.storage.local.clear()
+                chrome.tabs.getCurrent(function(tab) {
+                    chrome.tabs.remove(tab.id, function() { });
+                });
+            }
+        }
+        ]
+    });
+}

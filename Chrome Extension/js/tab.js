@@ -10,7 +10,11 @@ $( document ).ready(function() {
         gotoTab(tabTitle)
     })
     $("#header-btc-logo").on('click', function(){
-        btcViewModal()
+        //btcViewModal()
+        
+        var btc_total = parseFloat($("#body").data("balance_btc")) / 100000000
+        sendAssetModal("BTC", "../images/btc-icon.png", true, btc_total, $("#body").data("fee_btc"))
+                    
     })
     $("#signMessageButton").on('click', function(){
         manualSignMessageModal($("#body").data("address"), $("#body").data("passphrase"))
@@ -91,15 +95,20 @@ $( document ).ready(function() {
         })
     
     })
-    
-    $(document).on("click", 'button#update-fee-button', function (event) { 
+    $(document).on("click", '#page-settings-fee', function (event) { 
         txFeeModal()
     })
-    
-    $(document).on("click", 'button#send-btc-button', function (event) { 
-        var btc_total = parseFloat($("#body").data("balance_btc")) / 100000000
-        sendAssetModal("BTC", "../images/btc-icon.png", true, btc_total, $("#body").data("fee_btc"))
-    })
+//    $(document).on("click", 'button#update-fee-button', function (event) { 
+//        //closeAllModals()
+//        txFeeModal()
+//    })
+//    
+//    $(document).on("click", 'button#send-btc-button', function (event) { 
+//        //closeAllModals()
+//        
+//        var btc_total = parseFloat($("#body").data("balance_btc")) / 100000000
+//        sendAssetModal("BTC", "../images/btc-icon.png", true, btc_total, $("#body").data("fee_btc"))
+//    })
     
     
     
@@ -210,15 +219,42 @@ function btcViewModal(){
             
                 
             
-                var txfeebutton = "<div style='padding: 10px'><button id='send-btc-button' class='btn btn-warning btn-sm'>Send</button></div>"
-                
-                var qrbutton = "<div style='padding: 10px'><button id='update-fee-button' class='btn btn-info btn-sm'>Custom</button></div>"
+//                var txfeebutton = "<div style='padding: 10px'><button id='send-btc-button' class='btn btn-warning btn-sm'>Send</button></div>"
+//                
+//                var qrbutton = "<div style='padding: 10px'><button id='update-fee-button' class='btn btn-info btn-sm'>Custom</button></div>"
+            
+                var txfeebutton = ""
+                var qrbutton = ""
             
                 var $message = $("<div id='dialogBtcView-container'><div class='row' align='center' style='padding: 20px 0 0 0;'><div class='col' align='center'><div style='font-weight: bold;'>Balance:</div><div style='font-size: 22px;'>"+btcBalance+"</div>"+txfeebutton+"</div><div class='col' align='center'><div style='font-weight: bold;'>Tx Fee:</div><div id='dialogBtcView-fee-custom' style='font-size: 22px;'>"+btcFee+"</div>"+qrbutton+"</div></div>")
              
                 return $message
             },
         buttons: [
+            {
+                label: 'Send',
+                cssClass: 'btn-primary',
+                action: function(dialogItself) { 
+                    
+                    dialogItself.close()
+                    
+                    var btc_total = parseFloat($("#body").data("balance_btc")) / 100000000
+                    sendAssetModal("BTC", "../images/btc-icon.png", true, btc_total, $("#body").data("fee_btc"))
+                    
+
+                }
+            },
+            {
+                label: 'Custom Fee',
+                cssClass: 'btn-info',
+                action: function(dialogItself) { 
+                    
+                    txFeeModal()
+                    
+                    dialogItself.close()
+
+                }
+            },
             {
                 label: 'Close',
                 cssClass: 'btn-secondary',
@@ -421,4 +457,9 @@ function idleCheck(){
         onAwayBack : awayBackCallback,
         awayTimeout : 600000 //10 minutes
     }).start();
+}
+
+function closeAllModals(){
+    $('.modal').modal('hide') // closes all active pop ups.
+    //$('.modal-backdrop').remove() // removes the grey overlay.
 }

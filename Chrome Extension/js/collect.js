@@ -308,7 +308,6 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                                 
                                 if (asset == "BTC") {
                                     
-                                    //------------ NEEDS WORK -------------
                                     dialogItself.getModalBody().find('#dialogSendAsset-header').html("<i class='fa fa-spinner fa-spin fa-3x fa-fw'></i><span class='sr-only'>Loading...</span>")
                                     sendBTC_test(add_from, add_to, sendtoamount, transfee, passphrase, function(signedtx){
                                         //push tx to network
@@ -318,7 +317,7 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                                                 if (status == "success") {
                                                     dialogItself.getModalBody().find('#dialogSendAsset-container').html("<div><div style='padding: 15px 0 15px 0; font-weight: bold; font-size: 18px;'>Transaction Sent!</div><i class='fa fa-check fa-3x' aria-hidden='true'></i></div><div style='padding: 15px 0 15px 0;'><a href='https://live.blockcypher.com/btc/tx/"+txid+"' target='_blank'>View your Transaction</a></div>")  
                                                     dialogItself.setClosable(false)
-//                                                  $("body").data("sendTx", true)
+                                                    $("body").data("sendTx", true)
                                                 } else {
                                                     dialogItself.getModalBody().find('#dialogSendAsset-header').html("Error")
                                                 }   
@@ -327,7 +326,6 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                                             dialogItself.getModalBody().find('#dialogSendAsset-header').html("Error")
                                         }
                                     })
-                                    //------------ NEEDS WORK -------------
                                     
                                     
                                 } else if (btc_total > transfee) { //check if enough btc balance for tx fee
@@ -358,7 +356,7 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                                                 if (status == "success") {
                                                     dialogItself.getModalBody().find('#dialogSendAsset-container').html("<div><div style='padding: 15px 0 15px 0; font-weight: bold; font-size: 18px;'>Transaction Sent!</div><i class='fa fa-check fa-3x' aria-hidden='true'></i></div><div style='padding: 15px 0 15px 0;'><a href='https://xchain.io/tx/"+txid+"' target='_blank'>View your Transaction</a></div>")  
                                                     dialogItself.setClosable(false)
-//                                                    $("body").data("sendTx", true)
+                                                    $("body").data("sendTx", true)
                                                 } else {
                                                     dialogItself.getModalBody().find('#dialogSendAsset-header').html("Error")
                                                 }   
@@ -395,15 +393,15 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
             cssClass: 'btn-default',
             action: function(dialogItself) {
 
-//                if($("body").data("sendTx") == true){
-//                    var address = $("#addressCurrent").data("address")
-//
-//                    getUnconfirmed(address, function(txs){
-//                        createTableUnconfirmed(txs)
-//                    })
-//                    $("body").data("sendTx", false)
-//
-//                }
+                if($("body").data("sendTx") == true){
+  
+                    getUnconfirmed($("#body").data("address"), function(data){
+                        updateUnconfirmed(data)
+                    })
+                    
+                    $("body").data("sendTx", false)
+
+                }
                 dialogItself.close()
 
             }
