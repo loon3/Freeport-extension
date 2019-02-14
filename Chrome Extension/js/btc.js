@@ -334,23 +334,6 @@ function getUnconfirmedXCP(address, txDataBTC, callback){
     })
 }
 
-function updateUnconfirmed_test(){
-    
-    //{data: xcp_txs[j], txid: xcp_txs[j].tx_hash, txtype: txtype}) 
-    
-    var txdata = new Array()
-    
-    txdata[0] = {data: {asset:"PEPECASH", asset_longname:"", destination:"1AtcSh7uxenQ6AR5xqr6agAegWRUF5N4uh", memo: null, quantity:"99.07700000", source:"147cUCdYBpvPLVnpvSNGz14Ue2USzi1FsQ", timestamp: 1548300936, tx_hash:"0028b0aef59cf8a72021ea48a94461a03676e36281fdf97da54d57d84cef447c",tx_type:"Send"}, txid: "0028b0aef59cf8a72021ea48a94461a03676e36281fdf97da54d57d84cef447c", txtype: "Send"}
-    
-    txdata[1] = {data: {asset:"PEPECASH", asset_longname:"", destination:"147cUCdYBpvPLVnpvSNGz14Ue2USzi1FsQ", memo: null, quantity:"99.07700000", source:"1AtcSh7uxenQ6AR5xqr6agAegWRUF5N4uh", timestamp: 1548300936, tx_hash:"04a9819e53a1bfa2d94ce761bec6548738fee3d270e63185ec5cc6edf0b4a525",tx_type:"Send"}, txid: "04a9819e53a1bfa2d94ce761bec6548738fee3d270e63185ec5cc6edf0b4a525", txtype: "Receive"}
-    
-    txdata[2] = {data: {expiration: 8064, fee_provided: "0.00000258", fee_provided_remaining: "0.00000258", fee_remaining: "0.00000000", fee_required: "0.00000000", fee_required_remaining: "0.00000000", get_asset: "CROPS", get_quantity: "0.05500000", get_remaining: "0.05500000", give_asset: "XCP", give_quantity: "14.57500000", give_remaining: "14.57500000", source: "147cUCdYBpvPLVnpvSNGz14Ue2USzi1FsQ", timestamp: 1548511175, tx_hash: "ce486a2cd0bc2bd1af0a91fc6f1ee673735f6332542a23efe305b995505944cb", tx_type: "Order"}, txid: "ce486a2cd0bc2bd1af0a91fc6f1ee673735f6332542a23efe305b995505944cb", txtype: "Order"}
-    
-    var data = {data: txdata, count: 3}
-    
-    updateUnconfirmed(data)
-}
-
 function updateUnconfirmed(data){
     
     var address = $("#body").data("address")
@@ -362,13 +345,6 @@ function updateUnconfirmed(data){
     } else {
         $("#unconfirmed-tx-dropdown-button").removeClass("btn-danger").addClass("btn-secondary") 
     }
-    
-    
-//send
-//{data: {asset:"PEPECASH", asset_longname:"", destination:"1AtcSh7uxenQ6AR5xqr6agAegWRUF5N4uh", memo: null, quantity:"99.07700000", source:"147cUCdYBpvPLVnpvSNGz14Ue2USzi1FsQ", timestamp: 1548300936, tx_hash:"0028b0aef59cf8a72021ea48a94461a03676e36281fdf97da54d57d84cef447c",tx_type:"Send"}, txid: "0028b0aef59cf8a72021ea48a94461a03676e36281fdf97da54d57d84cef447c", txtype: "Send"}
-    
-//order
-//{data: {expiration: 8064, fee_provided: "0.00000258", fee_provided_remaining: "0.00000258", fee_remaining: "0.00000000", fee_required: "0.00000000", fee_required_remaining: "0.00000000", get_asset: "CROPS", get_quantity: "0.05500000", get_remaining: "0.05500000", give_asset: "XCP", give_quantity: "14.57500000", give_remaining: "14.57500000", source: "13gtPK97tRPrzvAsCv8389qnEsQqWtZuq1", timestamp: 1548511175, tx_hash: "ce486a2cd0bc2bd1af0a91fc6f1ee673735f6332542a23efe305b995505944cb", tx_type: "Order"}, txid: "ce486a2cd0bc2bd1af0a91fc6f1ee673735f6332542a23efe305b995505944cb", txtype: "Order"}
     
     var txDisplay = "<div style='margin: -8px 0 -8px 0;'>"
     
