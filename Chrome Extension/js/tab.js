@@ -28,6 +28,10 @@ $( document ).ready(function() {
         gotoTab("create")
     })
     
+    $("#container-trade-button").on('click', function(){
+        gotoTab("trade")
+    })
+    
     $("#page-collect-browse-select").on('click', function(){
         pageCollectBrowse()
     })
