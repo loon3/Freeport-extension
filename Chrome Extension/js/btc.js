@@ -475,8 +475,6 @@ function updateUnconfirmed(data){
 }
 
 
-//--- still needs work ---
-
 function sendBTC_test(add_from, add_to, sendtotal, transfee, mnemonic, callback){
  
     var amountremaining = ((parseFloat(sendtotal) * 100000000) + (parseFloat(transfee)*100000000))/100000000;
