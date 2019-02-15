@@ -1,3 +1,6 @@
+window.addEventListener('beforeunload', function(event) {
+	chrome.storage.local.set({'instances': 0}, function() {})
+})
 
 
 $( document ).ready(function() {   
