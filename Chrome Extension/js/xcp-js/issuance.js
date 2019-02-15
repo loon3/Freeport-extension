@@ -1,4 +1,4 @@
- //createIssuance_opreturn("1AtcSh7uxenQ6AR5xqr6agAegWRUF5N4uh", "PEPELITTLE", 0, "false", "LOCK", 0.0003, "mn")
+ //createIssuance_opreturn("address", "asset", 0, "false", "LOCK", 0.0003, "passphrase")
 
 
 
