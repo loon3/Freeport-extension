@@ -7,7 +7,7 @@
       "48": "images/icon-48.png"
    },
    "background": {
-      "scripts": ["js/background.js"],
+      "scripts": ["js/background2.js"],
       "persistent": false
    },
    "browser_action": {
@@ -26,7 +26,7 @@
        "html/*.*"
    ],
    "permissions": [
-        "tabs",
+        "activeTab",
         "storage"
    ],
    "manifest_version": 2,
