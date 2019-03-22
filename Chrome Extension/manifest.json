@@ -7,18 +7,12 @@
       "48": "images/icon-48.png"
    },
    "background": {
-      "scripts": ["js/background2.js"],
+      "scripts": ["js/background.js"],
       "persistent": false
    },
    "browser_action": {
       "default_icon": "images/icon-48.png"
    },
-   "content_scripts": [
-    {
-      "matches": ["*://*.digirare.com/cards/*"],
-      "js": ["js/cash.min.js","js/contentscript.js"]
-    }
-   ],
    "web_accessible_resources": [
        "js/*.*",
        "images/*.*",
@@ -26,11 +20,12 @@
        "html/*.*"
    ],
    "permissions": [
-        "activeTab",
-        "storage"
+        "storage",
+        "https://*.digirare.com/",
+        "https://*.xchain.io/"
    ],
    "manifest_version": 2,
    "name": "Freeport",
    "short_name": "freeport",
-   "version": "0.1"
+   "version": "0.2"
 }

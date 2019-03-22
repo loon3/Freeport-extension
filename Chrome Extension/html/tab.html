@@ -29,6 +29,10 @@
     <script src="../js/xcp-js/issuance.js" defer></script>
     <script src="../js/xcp-js/dex.js" defer></script>
     
+<!--
+    <script src="../js/common.js"></script>
+    <script src="../js/imgur.js"></script>
+-->
     <script src="../js/lib/ipfs.js"></script>
     <script src="../js/lib/buffer.js"></script>
     
@@ -45,6 +49,7 @@
     <script src="../js/passphrase.js"></script>
     <script src="../js/tab.js"></script>
     <script src="../js/collect.js"></script>
+    <script src="../js/create.js"></script>
     <script src="../js/settings.js"></script>
     
     <script src="../js/apikeys.js"></script>
@@ -110,13 +115,19 @@
         .collection-item-asset-end:hover { 
             background-color: rgba(0, 0, 0, 0.1);
         }
+        
+        .issued-item:hover { 
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
         .inventory-asset-name {
             font-size: 16px;
             font-weight: bold;
         }
         .inventory-asset-name-long {
-            font-size: 10px;
+            font-size: 16px;
             font-weight: bold;
+            word-break: break-all;
         }
         .btn-back { 
           color: #ffffff; 
@@ -315,15 +326,14 @@
         <h1>Create</h1>
         <p class="lead">
             Issue your own cryptogood asset.
-<!--
             <ul class="list-group">
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">My Issued Cryptogoods</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Create New Unique (1 of 1)</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Create New Limited Edition</li>
+                <li id='page-container-create-new-button' class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Create New Asset</li>
+                <li id='page-container-create-manage-button' class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Manage My Assets</li>
             </ul>
--->
-            <div class="h3" style="padding: 50px; background-color: #38444f;" align="center">Coming soon!</div>
+<!--            <div class="h3" style="padding: 50px; background-color: #38444f;" align="center">Coming soon!</div>-->
         </p>
+      </div>
+      <div class="jumbotron mt-3 jumbotron-tab-container-content" id="page-container-create-content">
       </div>
       
 <!--Settings-->

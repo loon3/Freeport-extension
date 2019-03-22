@@ -38,6 +38,11 @@ $( document ).ready(function() {
     $("#page-collect-browse-select").on('click', function(){
         pageCollectBrowse()
     })
+    
+    $("#page-container-create-manage-button").on('click', function(){
+        pageCreateManage($("#body").data("address"))
+    })
+    
     $("#page-collect-search-select").on('click', function(){
         pageCollectSearchModal()
     })
@@ -55,7 +60,9 @@ $( document ).ready(function() {
         var assetdivisible = $(this).data("divisible")
         var assetqty = $(this).data("quantity")
         var assetdescription = $(this).data("description")
-        pageCollectAsset(assetname, assetimage, assetdivisible, assetqty, assetdescription)
+        var assetalias = $(this).data("alias")
+        var assetlocked = $(this).data("alias")
+        pageCollectAsset(assetname, assetimage, assetdivisible, assetqty, assetdescription, assetalias, assetlocked)
         window.scrollTo(0,0);
     }) 
     $("#page-container-collect-content").on('click', 'div.collection-item-asset-end', function(){ 
@@ -70,11 +77,35 @@ $( document ).ready(function() {
         chrome.storage.local.get(['fee_custom'], function(result) {
             sendAssetModal(assetname, assetimage, assetdivisible, assetqty, result.fee_custom)
         })
+
     }) 
+    
+    $("#page-container-create").on('click', 'li#page-container-create-new-button', function(){ 
+        chrome.storage.local.get(['fee_custom'], function(result) {
+            
+            var btc_total = parseFloat($("#body").data("balance_btc")) / 100000000
+            var fee_set = parseFloat(result.fee_custom)
+            
+            if(btc_total < fee_set){
+                BootstrapDialog.show({
+                    title: 'Not Available',
+                    message: 'You must deposit enough BTC to pay transaction fee.'
+                });
+            } else {
+                getUniqueAsset(function(assetid){
+                    issueAssetModal(assetid, result.fee_custom)
+                })
+            }
+        })
+    })
     
     $("#body").on('click', 'button#page-inventory-back-button', function(){ 
         $("#leftbar-container").html("")
         pageCollectInventory($("#body").data("address"))
+    }) 
+    $("#body").on('click', 'button#page-create-back-button', function(){ 
+        $("#leftbar-container").html("")
+        gotoTab("create")
     }) 
     $("#body").on('click', 'button#page-collect-back-button', function(){ 
         $("#leftbar-container").html("")
@@ -84,6 +115,17 @@ $( document ).ready(function() {
     $("#body").on('click', 'button.unconfirmed-tx-dropdown-item', function(){ 
         var txid = $(this).data("txid")
         window.open("https://xchain.io/tx/"+txid);
+    }) 
+    
+     $("#body").on('click', 'button.asset-lock-button', function(){ 
+        var asset = $(this).data("asset")
+        var alias = $(this).data("alias")
+        var divisible = $(this).data("divisible")
+        var address = $("#body").data("address")
+        
+        chrome.storage.local.get(['fee_custom'], function(result) {
+            lockAssetModal(asset, alias, address, divisible, result.fee_custom)
+        })
     }) 
     
     $(document).on('click', '#header-address', function(){ 
@@ -144,6 +186,46 @@ $( document ).ready(function() {
             $("#decrypt-passphrase-btn").click();
         }
     }))
+    
+    $("body").on('keyup', '.dialogIssueAsset-field-req', (function(event) {
+        
+        var qty = parseFloat($("#dialogIssueAsset-qty").val())
+        var name = $("#dialogIssueAsset-name").val()
+        
+        console.log(qty)
+        
+        if (qty > 0 && qty < 18446744073709551615 && name.length > 0) {
+            $("#dialogIssueAsset-create-btn").removeClass('disabled')
+        } else {
+            $("#dialogIssueAsset-create-btn").addClass('disabled')
+        }
+    }))
+    
+    $("body").on('change', '#imgur-file-upload[type=file]', function(){ 
+        
+        $("#dialogIssueAsset-imgur-file-upload-container").hide()
+        $("#dialogIssueAsset-imgur-file-upload-spinner").html("<i class='fa fa-spinner fa-spin fa-3x fa-fw'></i>")
+
+        var dom = this
+        
+        setTimeout(function(){
+        
+            uploadFileImgur(dom, function(data){
+                console.log(data)
+                if(data.success){
+
+                    $("#dialogIssueAsset-imgur-file-upload-spinner").hide()
+
+                    $("#dialogIssueAsset-form-container").show()
+                    $("#dialogIssueAsset-header").show()
+
+                    $("#dialogIssueAsset-image-container").html("<img src='"+data.message+"' style='width: 100%; max-width: 400px;'>")
+                    $("#dialogIssueAsset-image").val(data.message)
+                }
+            })
+            
+        }, 2000)
+    });
     
     
     //ipfsInit()
@@ -470,3 +552,4 @@ function closeAllModals(){
     $('.modal').modal('hide') // closes all active pop ups.
     //$('.modal-backdrop').remove() // removes the grey overlay.
 }
+

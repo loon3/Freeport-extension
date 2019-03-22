@@ -12,3 +12,4 @@ Currently under development.
 ## Release Notes
 
 v0.1 - Initial release
+v0.2 - Issuances via Imgur

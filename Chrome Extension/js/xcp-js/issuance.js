@@ -24,6 +24,33 @@ function create_new_assetid() {
     
 }
 
+function uniqueAssetCheck(resolve, reject) {
+
+    var assetid = create_new_assetid()
+    //console.log(assetid)
+
+    var source_html = "https://xchain.io/api/asset/"+assetid;
+
+    $.getJSON( source_html, function( data ) {
+        if(data.error) { //asset is unique
+            resolve(assetid);
+        } else { 
+            reject()  
+        }  
+    });
+
+}
+
+function getUniqueAsset(callback){
+    
+    new Promise((r, j) => {
+        uniqueAssetCheck(r, j);
+    }).then((result) => {
+        callback(result)
+    });
+    
+}
+
 function is_asset_unique(add_from, assetid, quantity, divisible, description, callback){
     
     var checkdiv = "no";
@@ -175,63 +202,54 @@ function create_issuance_data_opreturn(asset, quantity, divisible, description) 
 
 
 
-function createIssuance_opreturn(add_from, assetid, quantity, divisible, description, transfee, mnemonic) {
+function createIssuance_opreturn(add_from, assetid, quantity, divisible, description, transfee, mnemonic, callback) {
         
     var amountremaining = (parseFloat(transfee)*100000000)/100000000;
         
     getutxos(add_from, mnemonic, amountremaining, function(total_utxo, satoshi_change){ 
             
-        create_asset_unique(add_from, assetid, quantity, divisible, description, function(datachunk_unencoded){
+        var datachunk_unencoded = create_issuance_data_opreturn(assetid, quantity, divisible, description);
         
-            if (datachunk_unencoded != "error") {
-                
-                var datachunk_encoded = xcp_rc4(total_utxo[0].txid, datachunk_unencoded);
+        if (datachunk_unencoded != "error") {
 
-                var bytelength = datachunk_encoded.length / 2;
-                
-                var scriptstring = "OP_RETURN "+bytelength+" 0x"+datachunk_encoded;      
-                console.log(scriptstring);
-                
-                var data_script = new bitcore.Script(scriptstring);
-//                var transaction = new bitcore.Transaction();
-                
-                var feeSatoshis = parseInt(transfee * 100000000)
-                console.log(feeSatoshis)
-                var transaction = new bitcore.Transaction().fee(feeSatoshis);
+            if(total_utxo.length == 0){callback("error")}            
 
-                for (i = 0; i < total_utxo.length; i++) {
-                    transaction.from(total_utxo[i]);     
-                }
+            var datachunk_encoded = xcp_rc4(total_utxo[0].txid, datachunk_unencoded);
+            var scriptstring = "OP_RETURN "+datachunk_encoded;
+            
+            var feeSatoshis = parseInt(transfee * 100000000)
 
-                console.log(total_utxo);
+            var tx = new bitcoinjs.TransactionBuilder(NETWORK);   
 
-                var xcpdata_opreturn = new bitcore.Transaction.Output({script: data_script, satoshis: 0}); 
+            //inputs
+            for (i = 0; i < total_utxo.length; i++) {  
+                tx.addInput(total_utxo[i].txid, total_utxo[i].vout) 
+            }
+            console.log(total_utxo);
 
-                transaction.addOutput(xcpdata_opreturn);
+            //outputs             
+            tx.addOutput(bitcoinjs.script.fromASM(scriptstring), 0)
 
-                console.log(satoshi_change);
-
-                if (satoshi_change > 5459) {
-                    transaction.change(add_from);
-                }
-
-                
-                var privkey = getprivkey(add_from, mnemonic); 
-                transaction.sign(privkey);
-
-                var final_trans = transaction.uncheckedSerialize();
-             
-            } else {
-
-                var final_trans = "error";
-
+            console.log(satoshi_change);
+            if (satoshi_change > 5459) {
+                tx.addOutput(add_from, satoshi_change)
             }
 
-            console.log(final_trans);
+            var privkey = getprivkey(add_from, mnemonic); 
+            var key = bitcoinjs.ECPair.fromWIF(privkey, NETWORK);
+            tx.sign(0, key);
 
-        });
-    
-    
+            var final_trans = tx.build().toHex();
+
+            callback(final_trans)  //push raw tx to the bitcoin network
+
+        } else {
+
+            var final_trans = "error";
+
+        }
+
+        console.log(final_trans);
         
     });
     
@@ -239,107 +257,109 @@ function createIssuance_opreturn(add_from, assetid, quantity, divisible, descrip
 }
 
 
-//function create_issuance_data(assetid, quantity, divisible, description) {
-//    
-//    //max 22 character description for single OP_CHECKMULTISIG output
-//    //divisible asset quantity must be less than 184467440737.09551615 and non-divisible less than 18446744073709551615 to be stored as an 8-byte hexadecimal
-//    
-//    if (divisible == true || divisible == "true") {
-//        var quantity_int = parseFloat(quantity).toFixed(8) * 100000000;
-//        var divisible_hex = "01000000000000000000";
-//    } else {
-//        var quantity_int = parseFloat(quantity); 
-//        var divisible_hex = "00000000000000000000";
-//    }
-//    
-//    quantity_int = Math.round(quantity_int);
-//    
-//    
-//    if (quantity_int <= 18446744073709551615) {
-//    
-//        if (description.length <= 22) {
-//
-//            var cntrprty_prefix = "434e545250525459"; 
-//            var trans_id = "00000014";
-//
-//            var descriptionlength = description.length;
-//            var descriptionlength_hex = padprefix(descriptionlength.toString(16),2);
-//
-//            var initiallength = parseFloat(descriptionlength) + 39;
-//            var initiallength_hex = padprefix(initiallength.toString(16),2);
-//
-//            var assetid_prehex = decToHex(assetid);
-//
-//            console.log(assetid_prehex);
-//            console.log(assetid_prehex.substr(2));
-//
-//            var assetid_hex = padprefix(assetid_prehex.substr(2),16);
-//
-//            var quantity_hex = padprefix(quantity_int.toString(16),16);
-//
-//            var description_hex_short = bin2hex(description);
-//            var description_hex = padtrail(description_hex_short, 44);
-//
-//            var issuance_tx_data = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
-//
-//            return issuance_tx_data;
-//
-//        } else if (description.length == 41) {
-//
-//            var cntrprty_prefix = "434e545250525459"; 
-//            var trans_id = "00000014";
-//
-//            //var descriptionlength = 41;
-//            var descriptionlength = description.length;
-//            var descriptionlength_hex = padprefix(descriptionlength.toString(16),2);
-//
-//            var initiallength = 61;
-//            var initiallength_hex = padprefix(initiallength.toString(16),2);
-//
-//            //var secondlength = 27;
-//            var secondlength = descriptionlength - 14;
-//            
-//            var secondlength_hex = padprefix(secondlength.toString(16),2);
-//
-//
-//            var assetid_prehex = decToHex(assetid);
-//
-//            console.log(assetid_prehex);
-//            console.log(assetid_prehex.substr(2));
-//
-//            var assetid_hex = padprefix(assetid_prehex.substr(2),16);
-//
-//            var quantity_hex = padprefix(quantity_int.toString(16),16);
-//
-//            var description_hex_short_a = bin2hex(description.substr(0,22));
-//            var description_hex_a = padtrail(description_hex_short_a, 44);
-//
-//            var description_hex_short_b = bin2hex(description.substr(22));
-//            var description_hex_b = padtrail(description_hex_short_b, 106);
-//
-//            var issuance_tx_data_a = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex_a;
-//
-//            var issuance_tx_data_b = secondlength_hex + cntrprty_prefix + description_hex_b;
-//
-//            console.log("msig output 1 length: "+issuance_tx_data_a.length);
-//            console.log("msig output 2 length: "+issuance_tx_data_b.length);
-//
-//            var issuance_tx_data = [issuance_tx_data_a, issuance_tx_data_b];
-//
-//            return issuance_tx_data;
-//
-//        }
-//        
-//    if (description.length > 22 && description.length != 41) {
-//        
-//        var error = "error";
-//        return error;
-//        
-//    }
-//    
-//    }
-//    
-//}
+function create_issuance_data(assetid, quantity, divisible, description) {
+    
+    //max 22 character description for single OP_CHECKMULTISIG output
+    //divisible asset quantity must be less than 184467440737.09551615 and non-divisible less than 18446744073709551615 to be stored as an 8-byte hexadecimal
+    
+    if (divisible == true || divisible == "true") {
+        var quantity_int = parseFloat(quantity).toFixed(8) * 100000000;
+        var divisible_hex = "01000000000000000000";
+    } else {
+        var quantity_int = parseFloat(quantity); 
+        var divisible_hex = "00000000000000000000";
+    }
+    
+    quantity_int = Math.round(quantity_int);
+    
+    
+    if (quantity_int <= 18446744073709551615) {
+    
+        if (description.length <= 22) {
+
+            var cntrprty_prefix = "434e545250525459"; 
+            
+            var trans_id = "00000014";
+            //test short
+            //var trans_id = "14";
+            
+            var descriptionlength = description.length;
+            var descriptionlength_hex = padprefix(descriptionlength.toString(16),2);
+
+            var initiallength = parseFloat(descriptionlength) + 39;
+            var initiallength_hex = padprefix(initiallength.toString(16),2);
+
+            var assetid_prehex = decToHex(assetid);
+
+            console.log(assetid_prehex);
+            console.log(assetid_prehex.substr(2));
+
+            var assetid_hex = padprefix(assetid_prehex.substr(2),16);
+
+            var quantity_hex = padprefix(quantity_int.toString(16),16);
+
+            var description_hex_short = bin2hex(description);
+            var description_hex = padtrail(description_hex_short, 44);
+
+            var issuance_tx_data = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
+
+            return issuance_tx_data;
+
+        } else if (description.length > 22 && description.length <= 75) {
+
+            var cntrprty_prefix = "434e545250525459"; 
+            var trans_id = "00000014";
+
+            //var descriptionlength = 41;
+            var descriptionlength = description.length;
+            var descriptionlength_hex = padprefix(descriptionlength.toString(16),2);
+
+            var initiallength = 61;
+            var initiallength_hex = padprefix(initiallength.toString(16),2);
+
+            //var secondlength = 27;
+            var secondlength = descriptionlength - 14;
+            var secondlength_hex = padprefix(secondlength.toString(16),2);
+
+
+            var assetid_prehex = decToHex(assetid);
+
+            console.log(assetid_prehex);
+            console.log(assetid_prehex.substr(2));
+
+            var assetid_hex = padprefix(assetid_prehex.substr(2),16);
+
+            var quantity_hex = padprefix(quantity_int.toString(16),16);
+
+            var description_hex_short_a = bin2hex(description.substr(0,22));
+            var description_hex_a = padtrail(description_hex_short_a, 44);
+
+            var description_hex_short_b = bin2hex(description.substr(22));
+            var description_hex_b = padtrail(description_hex_short_b, 106);
+
+            var issuance_tx_data_a = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex_a;
+
+            var issuance_tx_data_b = secondlength_hex + cntrprty_prefix + description_hex_b;
+
+            console.log("msig output 1 length: "+issuance_tx_data_a.length);
+            console.log("msig output 2 length: "+issuance_tx_data_b.length);
+
+            var issuance_tx_data = [issuance_tx_data_a, issuance_tx_data_b];
+
+            return issuance_tx_data;
+
+        }
+        
+    if (description.length > 75) {
+        
+        var error = "error";
+        return error;
+        
+    }
+    
+    }
+    
+}
 
 
 //function createIssuance(add_from, assetid, quantity, divisible, description, msig_total, transfee, mnemonic, msig_outputs) {

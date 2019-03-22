@@ -118,13 +118,20 @@ function getutxos(add_from, mnemonic, amountremaining, callback){
     var privkey = getprivkey(add_from, mnemonic);     
     var source_html = "https://api.blockcypher.com/v1/btc/main/addrs/"+add_from+"?unspentOnly=1&includeScript=1"
     
-    var total_utxo = new Array();   
+    var total_utxo = new Array();  
+    var satoshi_change = 0;
        
     $.getJSON( source_html, function( data ) {
         
         data = data.txrefs
         
         console.log(amountremaining);
+        
+        console.log(data);
+        
+        if(!data){
+            callback(total_utxo, satoshi_change);
+        }
         
         data.sort(function(a, b) {
             return b.value - a.value
@@ -158,9 +165,7 @@ function getutxos(add_from, mnemonic, amountremaining, callback){
         });
         
         if (amountremaining < 0) {
-            var satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
-        } else {
-            var satoshi_change = 0;
+            satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
         }
         
         console.log(total_utxo)

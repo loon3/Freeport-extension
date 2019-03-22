@@ -1,0 +1,57 @@
+<div id="dialogIssueAsset-container" align="center">
+<!--
+<div id="dialogIssueAsset-header" style="padding: 15px 0 30px 0; width: 100%;" align="center">
+    <div id="dialogIssueAsset-icon-lg" style="padding: 0 0 10px 0; width: 100%"></div>
+    <div align="center" style="width: 100%;">
+        <div>Available Balance: </div>
+        <div style="font-weight: bold; font-size: 18pt;"><span id="dialogIssueAsset-balance" class="dialogBuyAsset-strong"></span></div>
+    </div>
+</div>
+-->
+    
+    <div id="dialogIssueAsset-header" style="padding: 15px 0 30px 0; width: 100%; display: none;" align="center">
+        <div id="dialogIssueAsset-image-container"></div>
+        <div style="padding-top: 10px;">Asset ID <span id="dialogIssueAsset-assetid">A</span></div>
+    </div>
+    
+<div align="left">
+    
+    <div id='dialogIssueAsset-imgur-file-upload-container' align="center" style="padding: 20px 20px 10px 20px;">
+        <form id="imgur">
+            <label class="btn btn-block btn-info">
+                Upload your asset image&hellip; 
+                <input id="imgur-file-upload" type="file" style="display: none;" class="imgur" accept="image/*" data-max-size="5000"/>
+            </label>
+        </form>
+    </div>
+    
+    <div id='dialogIssueAsset-imgur-file-upload-spinner' align='center'></div>
+    
+    <div id='dialogIssueAsset-form-container' style="display: none;">
+        <form id="dialogIssueAsset-form">
+          <div class="form-group">
+              <label for="dialogIssueAsset-image">Imgur URL</label>
+              <input id="dialogIssueAsset-image" type="text" class="form-control" autocomplete="off" disabled>
+          </div>
+          <div class="form-group">
+              <label for="dialogIssueAsset-name">Asset Name</label>
+              <input id="dialogIssueAsset-name" type="text" class="form-control dialogIssueAsset-field-req" autocomplete="off" maxlength="23" placeholder="My First Rare Art">
+          </div>
+          <div class="form-group" id="dialogIssueAsset-qty-group">
+              <label for="dialogIssueAsset-qty">Quantity</label>
+              <input id="dialogIssueAsset-qty" type="text" class="form-control dialogIssueAsset-field-req" placeholder="100" autocomplete="off">
+          </div> 
+          <div class="form-check" style="margin: -10px 0 8px 0;" id="dialogIssueAsset-isdivisible-group">
+            <input type="checkbox" class="form-check-input" id="dialogIssueAsset-isdivisible">
+            <label class="form-check-label" for="dialogIssueAsset-isdivisible"><span style="font-weight: normal;">Divisible</span></label>
+          </div>
+        </form>
+        
+        <div align="center">Current fee: <b><span class="dialog-transfee"></span> BTC</b></div>
+        <div align="center" class="dialog-txfeebutton"></div> 
+    </div>
+</div>
+
+</div>
+
+    

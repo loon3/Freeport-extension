@@ -37,7 +37,7 @@ function pageCollectInventory(address){
 
     var collection = ""
     var collectionUnknown = ""
-    var name, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry
+    var name, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias
     
     
     $.getJSON( source_html, function( data ) {
@@ -70,14 +70,27 @@ function pageCollectInventory(address){
         for(var i=0; i < assetArrayLength; i++){
             
             cardDivisible = data['data'][i]['asset']['divisible']
+            cardDescription = data['data'][i]['asset']['description']
             cardQty = data['data'][i]['balance']['quantity']
             cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
+            cardAlias = ""
+            
             
             if(data['data'][i]['card'] == false){
                 cardImage = "../images/unknown.png"
+                if(cardDescription.length >= 16){
+                    var checkImgur = cardDescription.substring(0, 5);
+                    if(checkImgur == "imgur"){
+                        var descArray = cardDescription.split(";");
+                        cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
+                        cardAlias = descArray[1]
+                    }
+                }
             } else {
                 cardImage = data['data'][i]['card']['image']
             }
+            
+            
             
             if(data['data'][i]['asset']['long_name'] == null){
                 name = data['data'][i]['asset']['name']
@@ -86,12 +99,22 @@ function pageCollectInventory(address){
                 name = data['data'][i]['asset']['long_name']
                 isLongname = "-long"
             } 
-            if(name.charAt(0) == "A"){isLongname = "-long"}
+            if(name.charAt(0) == "A"){
+                isLongname = "-long"
+            }
+            
+            if(!cardAlias){
+                var display_name = name
+                cardAlias = ""
+            } else {
+                var display_name = cardAlias
+                isLongname = ""
+            }
             
             collectionEntry = ""
-            collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+name+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='No Description'>"
+            collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+name+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
             collectionEntry += "<div align='center' style='margin: auto;'><div style=''><img class='lozad' data-src='"+cardImage+"' width='120px'></div>"
-            collectionEntry += "<div class='inventory-asset-name"+isLongname+"' style='font-weight: bold; padding-top: 8px;'>"+name+"</div>"
+            collectionEntry += "<div class='inventory-asset-name"+isLongname+"' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
             collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
             collectionEntry += "</div></div>"
 
@@ -129,7 +152,7 @@ function pageCollectInventory(address){
     })
 }
 
-function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription){
+function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias){
     
     $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
     
@@ -139,29 +162,51 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     $("#leftbar-container").html("<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
       
     var assetInfo = ""
- 
+    
     assetquantity = Number(assetquantity).toFixed(8).replace(/\.?0+$/,"")
     
     assetInfo += "<div align= 'center' style='position: relative; top: -30px; background-color: #38444f;'>Asset Information</div>"
     assetInfo += "<div style='padding: 0 15px 0 15px;'>"
-    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div></div>"
+    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div></div>"
     
     //<div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Gift (Soon!)</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Bonus (Soon!)</button></div>
     
-    assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname+"</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
-    assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
-    assetInfo += "<div class='col-lg-12' align='center' style='padding: 20px;'>"
-    assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
-//    assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
-//    assetInfo += "<h4>"+assetdescription+"</h4>"
-//    assetInfo += "</div>"
+    if(assetalias.length > 0){
+        var assetname_display = assetalias + " <div style='font-size: 18px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
+        
+        assetdescription = ""
+    } else {
+        var assetname_display = assetname
+    }
     
-    assetInfo += "</div>"
-    assetInfo += "</div>"
-    assetInfo += "</div>"
+    assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display+"</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
+    assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
+    assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
+    assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
+    assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
+    assetInfo += "<h4>"+assetdescription+"</h4>"
+    
+    var source_html = "https://xchain.io/api/asset/"+assetname
+    
+    $.getJSON( source_html, function( data ) {
+        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Created By:<br><span style='font-weight: bold;'>"+data.issuer+"</span></div>"
+        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
+        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
+        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
+        assetInfo += "</div></div></div></div>"
+        
+        $("#page-container-collect-content").html(assetInfo)
+    })
+    
+    
+//    assetInfo += "</div>"
+//    
+//    assetInfo += "</div>"
+//    assetInfo += "</div>"
+//    assetInfo += "</div>"
 
 
-    $("#page-container-collect-content").html(assetInfo)
+    
     
 }
 
