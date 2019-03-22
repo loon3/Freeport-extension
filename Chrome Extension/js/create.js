@@ -80,7 +80,7 @@ function lockAssetModal(asset, alias, address, divisible, fee_custom){
 
                         //var $message = $('<div></div>').load('modal/dialog-upload-image.html', function(){})
                        
-                        var $message = $("<div id='dialogLockAsset-container' align='center'></div>").html("<p class='lead'>"+alias+"</p><p class='small'>ID // "+asset+"</p><p>Locking will permanently prevent additional issuance of this asset.</p><p>Do you want to lock?</p><div align='center' style='margin-top: 20px;'>Current fee: <b><span class='dialog-transfee'>"+fee_custom+"</span> BTC</b></div><div align='center' class='dialog-txfeebutton'>"+txfeebutton+"</div>")
+                        var $message = $("<div id='dialogLockAsset-container' align='center'></div>").html("<p class='lead'>"+alias+"</p><p class='small'>ID // "+asset+"</p><div style='color: #FFEB70; font-weight: bold; font-size: 18px;'><p>Locking will permanently prevent additional issuance of this asset.</p><p>Do you want to lock?</p></div><div align='center' style='margin-top: 20px;'>Current fee: <b><span class='dialog-transfee'>"+fee_custom+"</span> BTC</b></div><div align='center' class='dialog-txfeebutton'>"+txfeebutton+"</div>")
                         return $message
 
                     },
