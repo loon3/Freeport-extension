@@ -16,4 +16,5 @@ https://chrome.google.com/webstore/detail/freeport/hbggjmemphljoifppaekgpohndiin
 ## Release Notes
 
 v0.1 - Initial release
+
 v0.2 - Issuances via Imgur
