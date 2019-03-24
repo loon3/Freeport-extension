@@ -80,6 +80,21 @@ $( document ).ready(function() {
 
     }) 
     
+    $("#page-container-collect-content").on('click', 'button.asset-tweet-who-button', function(){ 
+        var asset = $(this).data("asset")
+        var url = "https://twitter.com/hashtag/"+asset
+        window.open(url, '_blank', "width=800,height=600,top=50,left=50")
+    }) 
+    
+    $("#page-container-collect-content").on('click', 'button.asset-tweet-share-button', function(){
+        var asset = $(this).data("asset")
+        var alias = $(this).data("alias")
+        var image = $(this).data("image")
+        var shareText = encodeURI(alias)+"%0A"+encodeURI(image)+"%0A%23"+asset+"%0A%0A"+encodeURI("Issue Cryptogoods on Bitcoin... Freeport.io")
+        var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
+        window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
+    }) 
+    
     $("#page-container-create").on('click', 'li#page-container-create-new-button', function(){ 
         chrome.storage.local.get(['fee_custom'], function(result) {
             

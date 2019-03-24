@@ -171,25 +171,29 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     //<div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Gift (Soon!)</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Bonus (Soon!)</button></div>
     
-    if(assetalias.length > 0){
-        var assetname_display = assetalias + " <div style='font-size: 18px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
-        
-        assetdescription = ""
-    } else {
-        var assetname_display = assetname
-    }
-    
-    assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display+"</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
-    assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
-    assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
-    assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
-    assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
-    assetInfo += "<h4>"+assetdescription+"</h4>"
-    
     var source_html = "https://xchain.io/api/asset/"+assetname
     
     $.getJSON( source_html, function( data ) {
-        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Created By:<br><span style='font-weight: bold;'>"+data.issuer+"</span></div>"
+        
+        if(assetalias.length > 0){
+            var assetname_display = assetalias + " <div style='font-size: 12px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
+            assetdescription = ""
+        } else {
+            assetalias = assetname
+            assetdescription = "<h4>"+assetdescription+"</h4>"
+            var assetname_display = assetname
+        }
+
+        assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display
+        assetInfo += "<div><div class='mr-3' style='display: inline-block;'><button type='button' class='btn btn-info btn-xs asset-tweet-share-button' data-asset='"+assetname+"' data-alias='"+assetalias+"' data-image='"+assetimage+"'><i class='fa fa-twitter' aria-hidden='true'></i> Share on Twitter</button></div><div class='' style='display: inline-block;'><button type='button' class='btn btn-default btn-xs asset-tweet-who-button' data-asset='"+assetname+"'><i class='fa fa-twitter' aria-hidden='true'></i> See who's tweeting about this</button></div></div>"
+        assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
+        assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
+        assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
+        assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
+        assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
+        assetInfo += assetdescription
+        
+        assetInfo += "<div style='font-size: 18px; font-weight: 300;'>Created By:<br><span style='font-weight: bold;'>"+data.issuer+"</span></div>"
         assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
         assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
         assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
