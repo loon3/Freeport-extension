@@ -67,19 +67,20 @@ function pageCollectInventoryXchain(address, data){
             }
 
 
-            //get image URLs from digirare
+           //get image URLs from digirare
             
-            var digirareAsset, digirareImage
+            var digirareAsset
             var digirareImageArray = []
   
             var assetArrayLength = data['data'].length
             for(var i=0; i < assetArrayLength; i++){
                 digirareAsset = data['data'][i]['asset']['name']
-                if(data['data'][i]['card']){
-                    digirareImage = data['data'][i]['card']['image']
-                }
-                digirareImageArray[digirareAsset] = cardImage
+                if(data['data'][i]['card']){ 
+                    digirareImageArray[digirareAsset] = data['data'][i]['card']['image']
+                }    
             }
+
+            console.log(digirareImageArray)
 
             for(var i=0; i < data_xchain['total']; i++){
                 
@@ -97,7 +98,7 @@ function pageCollectInventoryXchain(address, data){
                 
 
                 if(digirareImageArray[cardName]){
-                    cardImage = data['data'][i]['card']['image']
+                    cardImage = digirareImageArray[cardName]
                 } else {
                     cardImage = "../images/unknown.png"
                     if(cardDescription.length >= 16){
