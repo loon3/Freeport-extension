@@ -34,121 +34,130 @@ function pageCollectInventory(address){
     $("#page-container-collect-content").show()
     
     var source_html = "https://digirare.com/api/wallet/"+address
+    var source_html2 = "https://xchain.io/api/balances/"+address
 
     var collection = ""
     var collectionUnknown = ""
-    var name, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias
+    var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name
     
     
     $.getJSON( source_html, function( data ) {
         
-        //$("#leftbar-container").html("<div id='page-collect-back-button-container' align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-collect-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
-    
-        //collection += "<div align='left' style='padding: 0 0 30px 0;'><button id='page-collect-back-button' type='button' class='btn btn-xs btn-back'><- Back</button></div>"
+       $.getJSON( source_html2, function( data_xchain ) {
         
-        collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
-        
-        collection += "<div class='row' style='margin: -30px 0 0 0;'>"
-        
-        //console.log(data)
-        
-        if(data.length == 0){
-            data['data'] = []
-            isEmptyCollection = true
-        } else {
-            isEmptyCollection = false
-        }
-        
-//        if(data['data'].length <= 50){
+            //$("#leftbar-container").html("<div id='page-collect-back-button-container' align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-collect-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
+
+            //collection += "<div align='left' style='padding: 0 0 30px 0;'><button id='page-collect-back-button' type='button' class='btn btn-xs btn-back'><- Back</button></div>"
+
+            collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
+
+            collection += "<div class='row' style='margin: -30px 0 0 0;'>"
+
+            //console.log(data)
+
+            if(data.length == 0 && data_xchain.total == 0){
+                data['data'] = []
+                isEmptyCollection = true
+            } else {
+                isEmptyCollection = false
+            }
+
+
+            
+            
+            //get image URLs from digirare
+            
+            var digirareAsset, digirareImage
+            var digirareImageArray = []
             var assetArrayLength = data['data'].length
-//            isLargeCollection = false
-//        } else {
-//            var assetArrayLength = 50
-//            isLargeCollection = true
-//        }
-        
-        for(var i=0; i < assetArrayLength; i++){
-            
-            cardDivisible = data['data'][i]['asset']['divisible']
-            cardDescription = data['data'][i]['asset']['description']
-            cardQty = data['data'][i]['balance']['quantity']
-            cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
-            cardAlias = ""
-            
-            
-            if(data['data'][i]['card'] == false){
-                cardImage = "../images/unknown.png"
-                if(cardDescription.length >= 16){
-                    var checkImgur = cardDescription.substring(0, 5);
-                    if(checkImgur == "imgur"){
-                        var descArray = cardDescription.split(";");
-                        cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
-                        cardAlias = descArray[1]
-                    }
+            for(var i=0; i < assetArrayLength; i++){
+                digirareAsset = data['data'][i]['asset']['name']
+                if(data['data'][i]['card']){
+                    digirareImage = data['data'][i]['card']['image']
                 }
-            } else {
-                cardImage = data['data'][i]['card']['image']
+                digirareImageArray[digirareAsset] = cardImage
             }
-            
-            
-            
-            if(data['data'][i]['asset']['long_name'] == null){
-                name = data['data'][i]['asset']['name']
-                isLongname = ""
-            } else {
-                name = data['data'][i]['asset']['long_name']
-                isLongname = "-long"
-            } 
-            if(name.charAt(0) == "A"){
-                isLongname = "-long"
-            }
-            
-            if(!cardAlias){
-                var display_name = name
-                cardAlias = ""
-            } else {
-                var display_name = cardAlias
-                isLongname = ""
-            }
-            
-            collectionEntry = ""
-            collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+name+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
-            collectionEntry += "<div align='center' style='margin: auto;'><div style=''><img class='lozad' data-src='"+cardImage+"' width='120px'></div>"
-            collectionEntry += "<div class='inventory-asset-name"+isLongname+"' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
-            collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
-            collectionEntry += "</div></div>"
 
-            //b3ffcc
-            if(cardImage != "../images/notrare.jpg"){
-                collection += collectionEntry
-            } else {
-                collectionUnknown += collectionEntry
-            }
-            
-        } 
-        collection += collectionUnknown
-        
-        if(isEmptyCollection){
-            collection += "<div class='col lead' align='center' style='margin: 25px 0 35px 0; padding: 20px; width: 100%; text-align: center;'>There's nothing in this collection!</div>"
-        }
-        
-        collection += "<div class='col-12 collection-item-asset-end' style='padding: 20px 0 16px 0'>"
-        collection += "<div id='page-collect-search-select' style='font-size: 14pt; font-weight: bold; width: 100%; text-align: center'><i class='fa fa-search'></i> Search assets at digirare.com</div>"
-        collection += "</div></div>"
-        
-        collection += "</div>"
-        
+            for(var i=0; i < data_xchain['total']; i++){
                 
-//        if(isLargeCollection){
-//            collection += "<div class='row'><div class='col small' align='center' style='padding: 20px;'>You have a large collection of "+data['data'].length+" assets!<br>AlphaMask will support large collections soonTM...</div></div>"
-//        }
-        
+                if(data_xchain['data'][i]['quantity'].indexOf('.') < 0){
+                    cardDivisible = false
+                } else {
+                    cardDivisible = true
+                }
 
-        
-        $("#page-container-collect-content").html(collection)
-        
-        const observer = lozad(); // lazy loads elements with default selector as '.lozad'
-        observer.observe();
+                cardName = data_xchain['data'][i]['asset']
+                cardDescription = data_xchain['data'][i]['description']
+                cardQty = data_xchain['data'][i]['quantity']
+                cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
+                cardAlias = ""
+                
+
+                if(digirareImageArray[cardName]){
+                    cardImage = data['data'][i]['card']['image']
+                } else {
+                    cardImage = "../images/unknown.png"
+                    if(cardDescription.length >= 16){
+                        var checkImgur = cardDescription.substring(0, 5);
+                        if(checkImgur == "imgur"){
+                            var descArray = cardDescription.split(";");
+                            cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
+                            cardAlias = descArray[1]
+                        }
+                    }
+                } 
+
+                if(data_xchain['data'][i]['asset_longname'] == ""){
+                    display_name = data_xchain['data'][i]['asset']
+                } else {
+                    display_name = data_xchain['data'][i]['asset_longname']
+                } 
+
+
+                if(cardAlias.length > 0){
+                    display_name = cardAlias
+                }
+
+                collectionEntry = ""
+                collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
+                collectionEntry += "<div align='center' style='margin: auto;'><div style=''><img class='lozad' data-src='"+cardImage+"' width='120px'></div>"
+                collectionEntry += "<div class='inventory-asset-name"+isLongname+"' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
+                collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
+                collectionEntry += "</div></div>"
+
+                //b3ffcc
+                if(cardImage != "../images/notrare.jpg"){
+                    collection += collectionEntry
+                } else {
+                    collectionUnknown += collectionEntry
+                }
+
+            } 
+            collection += collectionUnknown
+
+            if(isEmptyCollection){
+                collection += "<div class='col lead' align='center' style='margin: 25px 0 35px 0; padding: 20px; width: 100%; text-align: center;'>There's nothing in this collection!</div>"
+            }
+
+            collection += "<div class='col-12 collection-item-asset-end' style='padding: 20px 0 16px 0'>"
+            collection += "<div id='page-collect-search-select' style='font-size: 14pt; font-weight: bold; width: 100%; text-align: center'><i class='fa fa-search'></i> Search assets at digirare.com</div>"
+            collection += "</div></div>"
+
+            collection += "</div>"
+
+
+    //        if(isLargeCollection){
+    //            collection += "<div class='row'><div class='col small' align='center' style='padding: 20px;'>You have a large collection of "+data['data'].length+" assets!<br>AlphaMask will support large collections soonTM...</div></div>"
+    //        }
+
+
+
+            $("#page-container-collect-content").html(collection)
+
+            const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+            observer.observe();
+
+        })
     })
 }
 
