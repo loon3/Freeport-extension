@@ -22,3 +22,5 @@ v0.2 - Issuances via Imgur
 v0.2.1 - Twitter buttons
 
 v0.2.2 - Improve collection feed
+
+v0.2.3 - Fix digirare image feed
