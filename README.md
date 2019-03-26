@@ -18,3 +18,7 @@ https://chrome.google.com/webstore/detail/freeport/hbggjmemphljoifppaekgpohndiin
 v0.1 - Initial release
 
 v0.2 - Issuances via Imgur
+
+v0.2.1 - Twitter buttons
+
+v0.2.2 - Improve collection feed
