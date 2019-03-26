@@ -13,7 +13,7 @@ function pageCollectBrowse(){
         $("#leftbar-container").html("<div id='page-collect-back-button-container' align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-collect-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
         collection += "<h2>Collections</h2><div class='row'>"
         for(var i=0; i < data.length; i++){
-            var collection_id = data[i]['collection'].splpageCollectInventoryit(' ').join('-').toLowerCase()   
+            var collection_id = data[i]['collection'].split(' ').join('-').toLowerCase()   
             collection += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item' align='center' style='height: 220px; padding-top: 20px' data-url='https://digirare.com/collections/"+collection_id+"'>"
             collection += "<div style=''><img src='"+data[i]['img']+"' width='110px'></div>"
             collection += "<div class='lead' style='font-weight: bold;'>"+data[i]['collection']+"</div>"
@@ -34,21 +34,25 @@ function pageCollectInventory(address){
     $("#page-container-collect-content").show()
     
     var source_html = "https://digirare.com/api/wallet/"+address
+    
+    $.getJSON( source_html, function( data ) {
+        pageCollectInventoryXchain(address, data)
+    }).error(function(){
+        var emptyData = {data: []}
+        pageCollectInventoryXchain(address, emptyData)
+    })
+}
+
+
+function pageCollectInventoryXchain(address, data){
     var source_html2 = "https://xchain.io/api/balances/"+address
 
     var collection = ""
     var collectionUnknown = ""
     var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name
-    
-    
-    $.getJSON( source_html, function( data ) {
-        
-       $.getJSON( source_html2, function( data_xchain ) {
-        
-            //$("#leftbar-container").html("<div id='page-collect-back-button-container' align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-collect-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
 
-            //collection += "<div align='left' style='padding: 0 0 30px 0;'><button id='page-collect-back-button' type='button' class='btn btn-xs btn-back'><- Back</button></div>"
-
+    $.getJSON( source_html2, function( data_xchain ) {
+        
             collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
 
             collection += "<div class='row' style='margin: -30px 0 0 0;'>"
@@ -63,12 +67,11 @@ function pageCollectInventory(address){
             }
 
 
-            
-            
             //get image URLs from digirare
             
             var digirareAsset, digirareImage
             var digirareImageArray = []
+  
             var assetArrayLength = data['data'].length
             for(var i=0; i < assetArrayLength; i++){
                 digirareAsset = data['data'][i]['asset']['name']
@@ -121,7 +124,7 @@ function pageCollectInventory(address){
                 collectionEntry = ""
                 collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
                 collectionEntry += "<div align='center' style='margin: auto;'><div style=''><img class='lozad' data-src='"+cardImage+"' width='120px'></div>"
-                collectionEntry += "<div class='inventory-asset-name"+isLongname+"' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
+                collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
                 collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
 
@@ -145,21 +148,15 @@ function pageCollectInventory(address){
 
             collection += "</div>"
 
-
-    //        if(isLargeCollection){
-    //            collection += "<div class='row'><div class='col small' align='center' style='padding: 20px;'>You have a large collection of "+data['data'].length+" assets!<br>AlphaMask will support large collections soonTM...</div></div>"
-    //        }
-
-
-
             $("#page-container-collect-content").html(collection)
 
             const observer = lozad(); // lazy loads elements with default selector as '.lozad'
             observer.observe();
 
-        })
     })
+
 }
+
 
 function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias){
     
