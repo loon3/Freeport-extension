@@ -7,7 +7,7 @@ Currently under development.
 
 https://chrome.google.com/webstore/detail/freeport/hbggjmemphljoifppaekgpohndiinfeb
 
-## Install from Github:
+## Install from Github
 
 - Go to chrome://extensions/ in your Chrome browser. 
 - Make sure Developer Mode is selected and click on "Load unpacked" 
