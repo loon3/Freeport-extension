@@ -547,6 +547,8 @@ function wsEventHandler(data){
     }
 }
 
+
+
 function idleCheck(){
     var awayCallback = function() {
         console.log("away");
@@ -567,4 +569,5 @@ function closeAllModals(){
     $('.modal').modal('hide') // closes all active pop ups.
     //$('.modal-backdrop').remove() // removes the grey overlay.
 }
+
 

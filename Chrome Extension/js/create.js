@@ -232,7 +232,7 @@ function issueAssetModal(assetid, fee_custom){
         var btcbalance = $("#body").data("balance_btc")
 
         var assetIssueDialog = new BootstrapDialog({
-        title: "Issue Asset",
+        title: "Create Asset",
         cssClass: "modal-nofade",
         //message: $('<div></div>').load('html/dialog-send-asset.html'),
         message: function(dialog){

@@ -7,6 +7,7 @@ const min_tx_fee = 0.000001
 
 var BC_API_TOKEN = false
 
+
 function isValidAddress(address) {
       
     try {
@@ -87,6 +88,62 @@ function getAddressBalance(address, callback){
         callback(data)
     })
   
+}
+
+function getAddressBroadcasts(address, callback){
+    var source_html = "https://xchain.io/api/broadcasts/"+address
+       
+    $.getJSON( source_html, function( data ) {
+        callback(data)
+    })
+}   
+
+function checkBroadcasts(data, callback){
+    
+    var result = []
+    
+    var message, type, asset, imageHash
+    
+    if(data.data.length > 0){
+        
+        for(var i=0; i < data.data.length; i++){
+            console.log(data.data[i])
+            if(data.data[i]['text'].indexOf('A:') > -1 && data.data[i]['text'].indexOf('I:') > -1 && data.data[i]['text'].indexOf(';') > -1){
+                type = "asset-imagehash"
+                message = data.data[i]['text'].split(";")
+
+                asset = message[0].replace("A:", "");
+                asset = "A"+hexToDec(base64ToHex(asset))
+
+                imageHash = message[1].replace("I:", "");
+                imageHash = base64ToHex(imageHash)
+
+                result.push({type: type, data: {asset: asset, imageHash: imageHash}})
+            }
+        }
+            
+    } 
+        
+    callback(result)
+    
+}
+
+function checkAnchors(address, callback){
+    getAddressBroadcasts(address, function(data){ 
+        checkBroadcasts(data, function(result){
+            console.log(result)
+            
+            var anchors = []
+            
+            for(var i=0; i < result.length; i++){
+                if(result[i]['type'] == "asset-imagehash"){
+                    anchors[result[i]['data']['asset']] = result[i]['data']['imageHash']
+                }
+            }
+            
+            callback(anchors)
+        })
+    })
 }
 
 function getFeeUpdate(callback){

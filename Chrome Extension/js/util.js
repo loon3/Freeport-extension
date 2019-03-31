@@ -247,6 +247,47 @@ function removeDuplicateObjects( arr, prop ) {
   }, obj)).map((i) => obj[i]);
 }
 
+function toDataURL(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      callback(reader.result);
+    }
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
+}
+
+function hexToBase64(str) {
+    return btoa(String.fromCharCode.apply(null,
+      str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
+    );
+}
+
+function base64ToHex(str) {
+    for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, "")), hex = []; i < bin.length; ++i) {
+        let tmp = bin.charCodeAt(i).toString(16);
+        if (tmp.length === 1) tmp = "0" + tmp;
+        hex[hex.length] = tmp;
+    }
+    return hex.join("");
+}
+
+function imageToHash(url, callback){
+  toDataURL(url, function(dataUrl) {
+      
+    var hash_sha256 = toHexString(bitcoinjs.crypto.ripemd160(dataUrl))
+    console.log(hash_sha256)
+    callback(hexToBase64(hash_sha256))
+    
+  })
+}
+
+
+
 //function concatToStorage(storage_type, target, data){
 //    
 //    if(storage_type = "session"){

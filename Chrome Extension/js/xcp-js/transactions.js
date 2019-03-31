@@ -552,20 +552,19 @@ function destroyXCP_opreturn(add_from, asset, asset_total, transfee, mnemonic, c
 
 //Broadcast Tx type
 
-function create_broadcast_data(message, value, feefraction, type) {
+function create_broadcast_data(message, value, feefraction) {
     
-    //max 32 character broadcast for single OP_CHECKMULTISIG output
     //fee fraction must be less than 42.94967295 to be stored as a 4-byte hexadecimal
     
     var feefraction_int = parseFloat(feefraction).toFixed(8) * 100000000;
     feefraction_int = Math.round(feefraction_int);
     
-    if (message.length <= 46 && feefraction_int <= 4294967295) {
+    if (message.length <= 49 && feefraction_int <= 4294967295) {
         
         var currenttime = Math.floor(Date.now() / 1000);
         var currenttime_hex = currenttime.toString(16);   
             
-        var cntrprty_prefix = "434e5452505254590000001e"; //includes ID = 30
+        var cntrprty_prefix = "434e5452505254591e"; //includes ID = 30
           
         var messagelength = message.length;
         var messagelength_hex = padprefix(messagelength.toString(16),2);
@@ -587,18 +586,8 @@ function create_broadcast_data(message, value, feefraction, type) {
 
         var value_hex = value_hex_array.join("");
         
-        if (type == "OP_CHECKMULTISIG" && message.length <= 32) {
-        
-            var message_hex = padtrail(message_hex_short, 64);
-
-            var broadcast_tx_data = initiallength_hex + cntrprty_prefix + currenttime_hex + value_hex + feefraction_hex + messagelength_hex + message_hex;
+        var broadcast_tx_data = cntrprty_prefix + currenttime_hex + value_hex + feefraction_hex + messagelength_hex + message_hex_short;
             
-        } else if (type == "OP_RETURN") {
-            
-            var broadcast_tx_data = cntrprty_prefix + currenttime_hex + value_hex + feefraction_hex + messagelength_hex + message_hex_short;
-            
-        }
-          
         return broadcast_tx_data;
     
     } else {
@@ -716,109 +705,60 @@ function sendBroadcast(add_from, message, value, feefraction, msig_total, transf
     
 }
 
-function sendBroadcast_opreturn(add_from, message, value, feefraction, transfee, mnemonic, callback) {
-       
-    var privkey = getprivkey(add_from, mnemonic);
-     
-    var source_html = "https://"+INSIGHT_SERVER+"/api/addr/"+add_from+"/utxo";     
-    
-    var total_utxo = new Array();   
-       
-    $.getJSON( source_html, function( data ) {
-        
-        var amountremaining = (parseFloat(transfee)*100000000)/100000000;
-        
-        console.log(amountremaining);
-        
-        data.sort(function(a, b) {
-            return b.amount - a.amount;
-        });
-        
-        $.each(data, function(i, item) {
-            
-             var txid = data[i].txid;
-             var vout = data[i].vout;
-             var script = data[i].scriptPubKey;
 
-            
-//             var txid = data[i].tx;
-//             var vout = data[i].n;
-//             var script = data[i].script;
-             var amount = parseFloat(data[i].amount);
-             
-             amountremaining = amountremaining - amount;            
-             amountremaining.toFixed(8);
-    
-             var obj = {
-                "txid": txid,
-                "address": add_from,
-                "vout": vout,
-                "scriptPubKey": script,
-                "amount": amount
-             };
-            
-             total_utxo.push(obj);
-              
-             //dust limit = 5460 
-            
-             if (amountremaining == 0 || amountremaining < -0.00005460) {                                 
-                 return false;
-             }
-             
-        });
-    
-        var utxo_key = total_utxo[0].txid;
+
+function sendBroadcast_opreturn(add_from, message, value, transfee, mnemonic, callback) {
+       
+
+    var amountremaining = (parseFloat(transfee)*100000000)/100000000;
         
-        if (amountremaining < 0) {
-            var satoshi_change = -(amountremaining.toFixed(8) * 100000000).toFixed(0);
-        } else {
-            var satoshi_change = 0;
-        }
+    getutxos(add_from, mnemonic, amountremaining, function(total_utxo, satoshi_change){ 
+
+        if(total_utxo.length == 0){callback("error")}     
     
-        var datachunk_unencoded = create_broadcast_data(message, value, feefraction, "OP_RETURN");
+        var datachunk_unencoded = create_broadcast_data(message, value, 0);
 
         console.log(datachunk_unencoded);
         
         if (datachunk_unencoded != "error") {
             
-            var datachunk_encoded = xcp_rc4(utxo_key, datachunk_unencoded);
+            var datachunk_encoded = xcp_rc4(total_utxo[0].txid, datachunk_unencoded);
 
-            var bytelength = datachunk_encoded.length / 2;
+            var scriptstring = "OP_RETURN "+datachunk_encoded;
+            
+            var feeSatoshis = parseInt(transfee * 100000000)
 
-            var scriptstring = "OP_RETURN "+bytelength+" 0x"+datachunk_encoded;
-            var data_script = new bitcore.Script(scriptstring);
+            var tx = new bitcoinjs.TransactionBuilder(NETWORK);   
 
-            var transaction = new bitcore.Transaction();
-
-            for (i = 0; i < total_utxo.length; i++) {
-                transaction.from(total_utxo[i]);     
+            //inputs
+            for (i = 0; i < total_utxo.length; i++) {  
+                tx.addInput(total_utxo[i].txid, total_utxo[i].vout) 
             }
-
             console.log(total_utxo);
 
-            var xcpdata_opreturn = new bitcore.Transaction.Output({script: data_script, satoshis: 0}); 
-
-            transaction.addOutput(xcpdata_opreturn);
+            ret = bitcoinjs.script.fromASM(scriptstring)
+            tx.addOutput(ret, 0)
 
             console.log(satoshi_change);
-
             if (satoshi_change > 5459) {
-                transaction.change(add_from);
+                tx.addOutput(add_from, satoshi_change)
             }
 
-            transaction.sign(privkey);
+            var privkey = getprivkey(add_from, mnemonic); 
+            var key = bitcoinjs.ECPair.fromWIF(privkey, NETWORK);
+            tx.sign(0, key);
 
-            var final_trans = transaction.uncheckedSerialize();
+
+            var final_trans = tx.build().toHex();
+
             
             console.log(final_trans);
         
-            //sendBTCpush(final_trans);  //uncomment to push raw tx to the bitcoin network
-            
-            callback();
+            callback(final_trans);
             
         } else {
             
-            $("#broadcastmessage").val("Error! Refresh to Continue...");
+            callback("error");
             
         }
         
