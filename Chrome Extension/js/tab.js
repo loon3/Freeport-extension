@@ -142,6 +142,29 @@ $( document ).ready(function() {
             lockAssetModal(asset, alias, address, divisible, result.fee_custom)
         })
     }) 
+     
+     $("#body").on('click', 'button.image-anchor-button', function(){ 
+        var asset = $(this).data("asset")
+        var alias = $(this).data("alias")
+        var address = $("#body").data("address")
+        
+        var imageUrl = decodeURIComponent($(this).data("imageurl"))
+        
+        chrome.storage.local.get(['fee_custom'], function(result) {
+            imageToHash(imageUrl, function(messageImage){
+                
+                var messageAsset = hexToBase64(decToHex(asset.substr(1)).substr(2))
+                var message = "A:"+messageAsset+";I:"+messageImage
+                
+                console.log(message)
+                
+                anchorImageModal(asset, alias, address, message, result.fee_custom)
+                
+                //sendBroadcast_opreturn($("#body").data("address"), message, 0, result.fee_custom, $("#body").data("passphrase"), function(rawtx){console.log(rawtx)})
+            
+            })
+        })
+    }) 
     
     $(document).on('click', '#header-address', function(){ 
         balanceClickModal($("#body").data("address"))

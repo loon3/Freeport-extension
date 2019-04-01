@@ -15,51 +15,61 @@ function pageCreateManage(address){
         $("#leftbar-container").html("<div id='page-create-back-button-container' align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-create-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
         collection += "<h2>Manage My Assets</h2><div class='row' style='padding-top: 20px;'>"
         
-        
-        
-        for(var i=0; i < data.data.length; i++){
+        checkAnchors(address, function(anchors){
             
-            if(assetArray.indexOf(data.data[i]['asset']) == -1){
-            
-                assetArray.push(data.data[i]['asset']);
+            console.log(anchors)
+        
+            for(var i=0; i < data.data.length; i++){
 
-                collection += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 issued-item' align='center' style='padding-top: 20px;' data-asset='"+data.data[i]['asset']+"'>"
+                if(assetArray.indexOf(data.data[i]['asset']) == -1){
 
-                cardImage = "../images/unknown.png"
-                cardAlias = data.data[i]['asset']
+                    assetArray.push(data.data[i]['asset']);
 
-                if(data.data[i]['description'].length >= 16){
-                    var checkImgur = data.data[i]['description'].substring(0, 5);
-                    if(checkImgur == "imgur"){
-                        var descArray = data.data[i]['description'].split(";");
-                        cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
-                        cardAlias = descArray[1]
+                    collection += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 issued-item' align='center' style='padding-top: 20px;' data-asset='"+data.data[i]['asset']+"'>"
+
+                    cardImage = "../images/unknown.png"
+                    cardAlias = data.data[i]['asset']
+
+                    if(data.data[i]['description'].length >= 16){
+                        var checkImgur = data.data[i]['description'].substring(0, 5);
+                        if(checkImgur == "imgur"){
+                            var descArray = data.data[i]['description'].split(";");
+                            cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
+                            cardAlias = descArray[1]
+                        }
                     }
+
+                    if(data.data[i]['locked']){
+                        var lockedButton = "<button type='button' class='btn btn-info btn-block asset-lock-button' disabled><i class='fa fa-lock' aria-hidden='true'></i> Locked</button>"
+                    } else {
+                        var lockedButton = "<button type='button' class='btn btn-info btn-block asset-lock-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"'><i class='fa fa-unlock' aria-hidden='true'></i> Unlocked</button>"
+                    }
+                    
+                    if(anchors[data.data[i]['asset']]){
+                        var anchorButton = "<button type='button' class='btn btn-success btn-block image-anchor-button' disabled><i class='fa fa-anchor' aria-hidden='true'></i> Anchored</button>"
+                    } else {
+                        var anchorButton = "<button type='button' class='btn btn-success btn-block image-anchor-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"' data-imageurl='"+encodeURIComponent(cardImage)+"'><i class='fa fa-anchor' aria-hidden='true'></i> No Anchor</button>" 
+                    }
+
+                    collection += "<div style=''><img src='"+cardImage+"' width='110px'></div>"
+                    collection += "<div class='lead' style='font-weight: bold; padding-top: 5px;'>"+cardAlias+"</div>"
+
+                    collection += "<div>"
+                    collection += "<div style='padding: 10px 10px 10px 10px; margin: auto; width: 100%; display: inline-block;'>"+lockedButton+"</div>"
+                    collection += "<div style='padding: 0px 10px 20px 10px; margin: auto; width: 100%; display: inline-block;'>"+anchorButton+"</div>"
+                    collection += "</div>"
+
+                    collection += "</div>"
+
                 }
-
-                if(data.data[i]['locked']){
-                    var lockedButton = "<button type='button' class='btn btn-success btn-block asset-lock-button' disabled><i class='fa fa-lock' aria-hidden='true'></i></button>"
-                } else {
-                    var lockedButton = "<button type='button' class='btn btn-primary btn-block asset-lock-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"'><i class='fa fa-unlock' aria-hidden='true'></i></button>"
-                }
-
-                collection += "<div style=''><img src='"+cardImage+"' width='110px'></div>"
-                collection += "<div class='lead' style='font-weight: bold; padding-top: 5px;'>"+cardAlias+"</div>"
-
-                collection += "<div>"
-                collection += "<div style='padding: 10px 10px 20px 10px; margin: auto; width: 60px; display: inline-block;'>"+lockedButton+"</div>"
-                //collection += "<div style='padding: 10px 10px 20px 10px; margin: auto; width: 60px; display: inline-block;'><button type='button' class='btn btn-info btn-block asset-hash-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"' data-divisible='"+data.data[i]['divisible']+"' disabled><i class='fa fa-anchor' aria-hidden='true'></i></button></div>"
-                collection += "</div>"
-
-                collection += "</div>"
+            } 
             
-            }
-        } 
+            collection += "</div>"
+
+            $("#page-container-create-content").html(collection)
+        })
         
         
-        collection += "</div>"
-        
-        $("#page-container-create-content").html(collection)
     })
 }
 
@@ -133,6 +143,75 @@ function lockAssetModal(asset, alias, address, divisible, fee_custom){
         lockAssetDialog.open() 
     })
 }
+
+function anchorImageModal(asset, alias, address, message, fee_custom){
+    
+    feeRecommendedCallback(function(fee_recommended){
+        
+        if(fee_recommended != fee_custom){
+            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
+        } else {
+            var txfeebutton = ""
+        }
+    
+     var anchorImageDialog = new BootstrapDialog({
+            title: "Anchor Image",
+            cssClass: "modal-nofade",
+            message: function(dialog){
+
+                        var $message = $("<div id='dialogAnchorImage-container' align='center'></div>").html("<p class='lead'>"+alias+"</p><p class='small'>ID // "+asset+"</p><div style='color: #FFEB70; font-weight: bold; font-size: 18px;'><p>Your image will be anchored by storing its unique fingerprint (image hash) in a bitcoin transaction.</p></div><div align='center' style='margin-top: 20px;'>Current fee: <b><span class='dialog-transfee'>"+fee_custom+"</span> BTC</b></div><div align='center' class='dialog-txfeebutton'>"+txfeebutton+"</div>")
+                        return $message
+
+                    },
+            buttons: [{
+                id: 'anchorImage-btn',
+                label: 'Anchor',
+                cssClass: 'btn-success',
+                action: function(dialogItself) {
+                    
+                            var passphrase = $("#body").data("passphrase")
+                            var transfee = (parseFloat($("#body").data("fee_btc")) * 100000000)/100000000
+                
+                            sendBroadcast_opreturn(address, message, 0, transfee, passphrase, function(signedtx){
+                                sendRawSignedTx(signedtx, function(status, txid){
+                                    if (status == "success") {
+                                        dialogItself.getModalBody().find('#dialogAnchorImage-container').html("<div><div style='padding: 15px 0 15px 0; font-weight: bold; font-size: 18px;'>Transaction Sent!</div><i class='fa fa-check fa-3x' aria-hidden='true'></i></div><div style='padding: 15px 0 15px 0;'><a href='https://xchain.io/tx/"+txid+"' target='_blank'>View your Transaction</a></div>")  
+                                        dialogItself.setClosable(false)
+                                        $("body").data("sendTx", true)
+                                    } else {
+                                        dialogItself.getModalBody().find('#dialogAnchorImage-container').html("Error")
+                                    }   
+                                })        
+                            }) 
+                    
+                            anchorImageDialog.getButton('anchorImage-btn').toggleEnable(false) 
+
+                        }
+                },
+                {
+                label: 'Close',
+                cssClass: 'btn-default',
+                action: function(dialogItself) {
+                    
+                    if($("body").data("sendTx") == true){
+  
+                        getUnconfirmed($("#body").data("address"), function(data){
+                            updateUnconfirmed(data)
+                        })
+
+                        $("body").data("sendTx", false)
+
+                    }
+                    dialogItself.close()
+                    
+                }
+            }]
+        })
+
+        anchorImageDialog.open() 
+    })
+}
+
 
 function uploadFileImgur(dom, callback){
     
