@@ -24,3 +24,5 @@ v0.2.1 - Twitter buttons
 v0.2.2 - Improve collection feed
 
 v0.2.3 - Fix digirare image feed
+
+v0.2.4 - Image Anchors
