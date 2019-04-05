@@ -220,9 +220,12 @@ function getutxos(add_from, mnemonic, amountremaining, callback){
              };
              
              total_utxo.push(obj);
-              
+             
+             //REMOVED 
              //dust limit = 5460          
-             if (amountremaining == 0 || amountremaining < -0.00005460) {                                 
+             //if (amountremaining == 0 || amountremaining < -0.00005460) {    
+              
+             if (amountremaining <= 0) { 
                  return false;
              }
              
