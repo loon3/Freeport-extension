@@ -180,12 +180,19 @@ function getutxos(add_from, mnemonic, amountremaining, callback){
        
     $.getJSON( source_html, function( data ) {
         
-        data = data.txrefs
-        
+        if(!data.txrefs){
+            if(data.unconfirmed_txrefs){
+                data = data.unconfirmed_txrefs
+            } else {
+                callback(total_utxo, satoshi_change);
+            }
+        } else {
+            data = data.txrefs
+        }
+
         console.log(amountremaining);
-        
         console.log(data);
-        
+
         if(!data){
             callback(total_utxo, satoshi_change);
         }
