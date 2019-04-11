@@ -26,3 +26,7 @@ v0.2.2 - Improve collection feed
 v0.2.3 - Fix digirare image feed
 
 v0.2.4 - Image Anchors
+
+v0.2.5 - Allow spending from unspent UTXOs
+
+v0.2.6 - Link Twitter username to address
