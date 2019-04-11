@@ -97,6 +97,7 @@ function pageCollectInventoryXchain(address, data){
                 cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
                 cardAlias = ""
                 
+                
 
                 if(digirareImageArray[cardName]){
                     cardImage = digirareImageArray[cardName]
@@ -121,6 +122,8 @@ function pageCollectInventoryXchain(address, data){
 
                 if(cardAlias.length > 0){
                     display_name = cardAlias
+                    cardAlias = encodeURIComponent(cardAlias).replace("'", "%27");
+                    cardDescription = encodeURIComponent(cardDescription).replace("'", "%27");
                 }
 
                 collectionEntry = ""
@@ -170,6 +173,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     $("#leftbar-container").html("<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
       
     var assetInfo = ""
+    var twitterAlias = ""
     
     assetquantity = Number(assetquantity).toFixed(8).replace(/\.?0+$/,"")
     
@@ -183,54 +187,72 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     $.getJSON( source_html, function( data ) {
         
-        checkAnchors(data.issuer, function(anchors){
+        checkRegistry(data.issuer, function(registry){
             
-            imageToHash(assetimage, function(imageHashFromUrl){
+            console.log(registry)
+        
+            checkAnchors(data.issuer, function(anchors){
+            
+                imageToHash(assetimage, function(imageHashFromUrl){
 
-                if(assetalias.length > 0){
-                    var assetname_display = assetalias + " <div style='font-size: 12px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
-                    assetdescription = ""
-                } else {
-                    assetalias = assetname
-                    assetdescription = "<h4>"+assetdescription+"</h4>"
-                    var assetname_display = assetname
-                }
-
-                assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display
-                assetInfo += "<div><div class='mr-3' style='display: inline-block;'><button type='button' class='btn btn-info btn-xs asset-tweet-share-button' data-asset='"+assetname+"' data-alias='"+assetalias+"' data-image='"+assetimage+"'><i class='fa fa-twitter' aria-hidden='true'></i> Share on Twitter</button></div><div class='' style='display: inline-block;'><button type='button' class='btn btn-default btn-xs asset-tweet-who-button' data-asset='"+assetname+"'><i class='fa fa-twitter' aria-hidden='true'></i> See who's tweeting about this</button></div></div>"
-                assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
-                assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
-                assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
-                assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
-                assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
-                assetInfo += assetdescription
-
-                assetInfo += "<div style='font-size: 18px; font-weight: 300;'>Created By:<br><span style='font-weight: bold;word-break: break-all;'>"+data.issuer+"</span></div>"
-                assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
-                assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
-                assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
-
-                if(anchors[assetname]){
-//                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Image Anchor Hash:<br><span style='font-weight: bold;word-break: break-all;'>"+anchors[assetname]+"</span></div>"
-                    
-                    console.log(base64ToHex(imageHashFromUrl))
-                    console.log(anchors[assetname])
-                    
-                    if(base64ToHex(imageHashFromUrl) == anchors[assetname]){
-                        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: green;'><i class='fa fa-anchor' aria-hidden='true'></i> Image Anchor Secured</div>"
+                    if(assetalias.length > 0){
+                        var assetname_display = decodeURIComponent(assetalias) + " <div style='font-size: 12px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
+                        assetdescription = ""
                     } else {
-                        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: red;'>Image Doesn't Match Anchor!</div>"
+                        assetalias = assetname
+                        assetdescription = "<h4>"+assetdescription+"</h4>"
+                        var assetname_display = assetname
                     }
-                }
+                    
+                    if(!registry.error){
+                        twitterAlias += "<div id='container-collect-issuer-twitter' data-twitter='"+registry.twitter.username+"' style='padding: 8px 0 0 0; cursor: pointer;'>"
+                        twitterAlias += "<div style='display: inline-block;'><img src='http://avatars.io/twitter/"+registry.twitter.username+"/small' class='rounded-circle'></div>"
+                        twitterAlias += "<div style='display: inline-block; margin-left: 8px; font-size: 24px; font-weight: 600;'>@"+registry.twitter.username+"</div>"
+                        twitterAlias += "<div style='display: inline-block; margin-left: 8px; color: #1a97f0;'><i class='fa fa-twitter'></i></div>"
+                        twitterAlias += "</div>"
+                        twitterAlias += "<div style='font-size: 12px; font-weight: bold; word-break: break-all; padding: 8px 0 8px 0;'>"+data.issuer+"</div>"
+                    } else {
+                        twitterAlias += "<div style='font-weight: bold; word-break: break-all;'>"+data.issuer+"</div>"
+                    }
 
-                assetInfo += "</div></div></div></div>"
+                    assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display
+                    assetInfo += "<div><div class='mr-3' style='display: inline-block;'><button type='button' class='btn btn-info btn-xs asset-tweet-share-button' data-asset='"+assetname+"' data-alias='"+assetalias+"' data-image='"+assetimage+"'><i class='fa fa-twitter' aria-hidden='true'></i> Share on Twitter</button></div><div class='' style='display: inline-block;'><button type='button' class='btn btn-default btn-xs asset-tweet-who-button' data-asset='"+assetname+"'><i class='fa fa-twitter' aria-hidden='true'></i> See who's tweeting about this</button></div></div>"
+                    assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
+                    assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
+                    assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
+                    assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
+                    assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
+                    assetInfo += assetdescription
 
-                $("#page-container-collect-content").html(assetInfo)
+                    assetInfo += "<div style='font-size: 18px; font-weight: 300;'>Created By:"
+                    assetInfo += twitterAlias 
 
-            })
+                    assetInfo += "</div>"
+                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
+                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
+                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
+
+                    if(anchors[assetname]){
+    //                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Image Anchor Hash:<br><span style='font-weight: bold;word-break: break-all;'>"+anchors[assetname]+"</span></div>"
+
+                        console.log(base64ToHex(imageHashFromUrl))
+                        console.log(anchors[assetname])
+
+                        if(base64ToHex(imageHashFromUrl) == anchors[assetname]){
+                            assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: green;'><i class='fa fa-anchor' aria-hidden='true'></i> Image Anchor Secured</div>"
+                        } else {
+                            assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: red;'>Image Doesn't Match Anchor!</div>"
+                        }
+                    }
+
+                    assetInfo += "</div></div></div></div>"
+
+                    $("#page-container-collect-content").html(assetInfo)
+
+                })
+            })  
         })
     })
-    
     
 //    assetInfo += "</div>"
 //    

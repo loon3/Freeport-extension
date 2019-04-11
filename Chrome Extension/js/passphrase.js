@@ -231,10 +231,18 @@ function initInventory(passphrase, address){
         var address = getAddressPassphrase(passphrase, 0)
     }
     $("#body").data("address", address)
-    $("#header-address").html(address)
-     
-    chrome.storage.local.set({'address': address}, function() {
+    $("#header-address").html("<div id='header-address-forclick' style='display: inline-block'>"+address+"</div>")
     
+    checkRegistry(address, function(registry){
+        if(!registry.error){
+            $("#header-address").append("<div id='header-address-twitter' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
+        } else {
+            $("#header-address").append("<div id='header-address-twitter-link' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'><i class='fa fa-twitter'></i></div>")
+        }
+    })
+
+    chrome.storage.local.set({'address': address}, function() {
+
         $(".jumbotron-tab-container").hide()
         $(".jumbotron-tab-container-content").hide()
         $("#page-container-collect-content").show()
@@ -262,8 +270,10 @@ function initInventory(passphrase, address){
                 idleCheck()
             })
         })
-        
+
     })
+        
+    
     
 }
 

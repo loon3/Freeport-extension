@@ -90,7 +90,7 @@ $( document ).ready(function() {
         var asset = $(this).data("asset")
         var alias = $(this).data("alias")
         var image = $(this).data("image")
-        var shareText = encodeURI(alias)+"%0A"+encodeURI(image)+"%0A%23"+asset+"%0A%0A"+encodeURI("Issue Cryptogoods on Bitcoin... Freeport.io")
+        var shareText = alias+"%0A"+encodeURI(image)+"%0A%23"+asset+"%0A%0A"+encodeURI("Issue Cryptogoods on Bitcoin... Freeport.io")
         var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
         window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
     }) 
@@ -113,6 +113,8 @@ $( document ).ready(function() {
             }
         })
     })
+    
+  
     
     $("#body").on('click', 'button#page-inventory-back-button', function(){ 
         $("#leftbar-container").html("")
@@ -166,8 +168,25 @@ $( document ).ready(function() {
         })
     }) 
     
-    $(document).on('click', '#header-address', function(){ 
+    $(document).on('click', '#header-address-forclick', function(){ 
         balanceClickModal($("#body").data("address"))
+    }) 
+    
+    $(document).on('click', '#header-address-twitter', function(){ 
+        
+        disconnectTwitterModal($(this).data("twitter"), $("#body").data("address"), $("#body").data("passphrase"))
+       
+    }) 
+    
+    $(document).on('click', '#header-address-twitter-link', function(){
+        connectTwitterModal($("#body").data("address"), $("#body").data("passphrase"))
+    })
+    
+    //container-collect-issuer-twitter
+    $("#page-container-collect-content").on('click', 'div#container-collect-issuer-twitter', function(){ 
+        var twitterUsername = $(this).data("twitter")
+        var url = "http://twitter.com/"+twitterUsername
+        window.open(url, '_blank', "width=800,height=600,top=50,left=50")
     }) 
     
     $(document).on("click", 'button#substitute-defaultfee-button', function (event) { 
@@ -402,6 +421,7 @@ function manualSignMessageModal(address, passphrase){
     var manualSignMessageDialog = new BootstrapDialog({
             title: 'Sign Message',
             cssClass: "modal-nofade",
+            closable: false,
             message: $('<div></div>').load('modal/dialog-message-sign.html'),
             buttons: [{
                 id: 'sign-btn',
@@ -435,6 +455,105 @@ function manualSignMessageModal(address, passphrase){
     manualSignMessageDialog.open() 
 
 
+}
+
+function checkRegistry(address, callback){
+    var source_html = "https://freeport.io/api/collection/"+address
+    
+    var noresult = {error:"Not found"}
+    
+    $.getJSON( source_html, function( data ) {
+        callback(data)
+    }).error(function(){
+        callback(noresult)
+    })
+}
+
+function connectTwitterModal(address, passphrase){
+    
+    var connectTwitterDialog = new BootstrapDialog({
+            title: 'Link Twitter',
+            cssClass: "modal-nofade",
+            closable: false,
+            message: $('<div></div>').load('modal/dialog-twitter-connect.html'),
+            buttons: [{
+                id: 'connect-twitter-btn',
+                label: 'Link',
+                cssClass: 'btn-info',
+                action: function(dialogItself) {
+
+                    var msg = dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()
+                       
+                    signMessage(address, passphrase, msg, function(sig){
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        
+                        dialogItself.getButton('connect-twitter-btn').hide() 
+                    })
+                     
+
+                    
+                }
+            },
+            {
+                label: 'Close',
+                cssClass: 'btn-secondary',
+                action: function(dialogItself) {  
+
+                    dialogItself.close()
+
+                }
+            }]
+    })
+
+    connectTwitterDialog.open() 
+
+    
+}
+
+
+function disconnectTwitterModal(user, address, passphrase){
+    
+    var disconnectTwitterDialog = new BootstrapDialog({
+            title: 'Unlink Twitter',
+            cssClass: "modal-nofade",
+            closable: false,
+           // message: $('<div></div>').load('modal/dialog-twitter-disconnect.html'),
+        
+            message: function(dialogItself){
+                        var $message = $('<div></div>').load('modal/dialog-twitter-disconnect.html', function(){
+                            $(this).find("#dialogTwitterConnect-handle").val(user)
+                        })
+                        
+                        return $message
+                    },
+            buttons: [{
+                id: 'connect-twitter-btn',
+                label: 'Unlink',
+                cssClass: 'btn-info',
+                action: function(dialogItself) {
+
+                    signMessage(address, passphrase, user, function(sig){
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>UNLINK_ADDRESS:"+address+";UNLINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        
+                        dialogItself.getButton('connect-twitter-btn').hide() 
+                    })
+                        
+                }
+            },
+            {
+                label: 'Close',
+                cssClass: 'btn-secondary',
+                action: function(dialogItself) {  
+
+                    dialogItself.close()
+
+                }
+            }]
+    })
+
+    disconnectTwitterDialog.open() 
+
+    
 }
 
 function balanceClickModal(currentaddr){
