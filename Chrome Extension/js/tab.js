@@ -3,7 +3,8 @@
 // })
 
 
-$( document ).ready(function() {   
+$( document ).ready(function() {  
+    
     $(".jumbotron-tab-container").hide()
     
     checkPassphrase() 
@@ -485,7 +486,9 @@ function connectTwitterModal(address, passphrase){
                     var msg = dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()
                        
                     signMessage(address, passphrase, msg, function(sig){
-                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        
+                        $('#link-twitter-about-tooltip').tooltip()
                         
                         dialogItself.getButton('connect-twitter-btn').hide() 
                     })

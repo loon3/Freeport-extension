@@ -43,16 +43,50 @@ function pageCollectInventory(address){
     })
 }
 
+function getXchainBalances(address, callback){
+
+    var url = "https://xchain.io/api/balances/"+address
+    $.getJSON( url, function( dataInit ) {
+
+        if(dataInit.total <= 500){
+            callback(dataInit)
+        } else {
+ 
+            var pages = Math.ceil(dataInit.total / 500)
+            var urls = []
+            
+            for(var i=2; i <= pages; i++){
+                urls[i-2] = "https://xchain.io/api/balances/"+address+"/"+i
+            }
+
+            var allData = dataInit.data
+            
+            Promise.all(urls.map(url => $.getJSON(url))).then(function(data){
+
+                for(var i=0; i < data.length; i++){
+                    for(var k=0; k < data[i].data.length; k++){
+                        allData.push(data[i].data[k])
+                    }
+                }
+                
+                var dataFinal = {address: address, data: allData, total: dataInit.total};
+                
+                callback(dataFinal)
+                
+            })
+        }
+
+    })
+}
 
 function pageCollectInventoryXchain(address, data){
-    var source_html2 = "https://xchain.io/api/balances/"+address
 
     var collection = ""
     var collectionUnknown = ""
     var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name
 
-    $.getJSON( source_html2, function( data_xchain ) {
-        
+    getXchainBalances(address, function(data_xchain) {
+
             collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
 
             collection += "<div class='row' style='margin: -30px 0 0 0;'>"
@@ -81,7 +115,7 @@ function pageCollectInventoryXchain(address, data){
                     }    
                 }
             }
-            console.log(digirareImageArray)
+            //console.log(digirareImageArray)
 
             for(var i=0; i < data_xchain['total']; i++){
                 
@@ -220,7 +254,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                     assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
                     assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
                     assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
-                    assetInfo += "<img src='"+assetimage+"' style='width: 100%; max-width: 400px;'></div>"
+                    assetInfo += "<img src='"+assetimage+"' style='max-width: 100%;'></div>"
                     assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
                     assetInfo += assetdescription
 
