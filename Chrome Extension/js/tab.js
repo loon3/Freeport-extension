@@ -55,21 +55,38 @@ $( document ).ready(function() {
         var url = $(this).data("url")
         window.open(url, '_blank', "width=800,height=600,top=50,left=50")
     }) 
+    
+    $("#page-container-collect-content").on('change', 'input#imageToggle', function(){ 
+        //console.log($(this).is(":checked"))
+        if($(this).is(":checked")){
+            $(".collection-asset-images").show()
+        } else {
+            $(".collection-asset-images").hide()
+        }
+    }) 
+    
+    
     $("#page-container-collect-content").on('click', 'div.collection-item-asset', function(){ 
+         
         var assetname = $(this).data("assetname")
         var assetimage = $(this).data("assetimage")
         var assetdivisible = $(this).data("divisible")
         var assetqty = $(this).data("quantity")
         var assetdescription = $(this).data("description")
         var assetalias = $(this).data("alias")
-        var assetlocked = $(this).data("alias")
-        pageCollectAsset(assetname, assetimage, assetdivisible, assetqty, assetdescription, assetalias, assetlocked)
-        window.scrollTo(0,0);
+
+        
+        var ypos = window.scrollY
+        console.log(ypos)
+
+        pageCollectAsset(assetname, assetimage, assetdivisible, assetqty, assetdescription, assetalias, ypos)
+        //window.scrollTo(0,0);
+
     }) 
-    $("#page-container-collect-content").on('click', 'div.collection-item-asset-end', function(){ 
+    $("#page-container-collect-assetview").on('click', 'div.collection-item-asset-end', function(){ 
         pageCollectSearchModal()
     }) 
-    $("#page-container-collect-content").on('click', 'button.asset-send-button', function(){ 
+    $("#page-container-collect-assetview").on('click', 'button.asset-send-button', function(){ 
         var assetname = $(this).data("asset")
         var assetimage = $(this).data("image")
         var assetdivisible = $(this).data("divisible")
@@ -81,13 +98,13 @@ $( document ).ready(function() {
 
     }) 
     
-    $("#page-container-collect-content").on('click', 'button.asset-tweet-who-button', function(){ 
+    $("#page-container-collect-assetview").on('click', 'button.asset-tweet-who-button', function(){ 
         var asset = $(this).data("asset")
         var url = "https://twitter.com/hashtag/"+asset
         window.open(url, '_blank', "width=800,height=600,top=50,left=50")
     }) 
     
-    $("#page-container-collect-content").on('click', 'button.asset-tweet-share-button', function(){
+    $("#page-container-collect-assetview").on('click', 'button.asset-tweet-share-button', function(){
         var asset = $(this).data("asset")
         var alias = $(this).data("alias")
         var image = $(this).data("image")
@@ -119,7 +136,12 @@ $( document ).ready(function() {
     
     $("#body").on('click', 'button#page-inventory-back-button', function(){ 
         $("#leftbar-container").html("")
-        pageCollectInventory($("#body").data("address"))
+//        pageCollectInventory($("#body").data("address"))
+        $("#page-container-collect-assetview").hide()
+        $("#page-container-collect-content").show()
+        var ypos = $(this).data("ypos")
+        window.scrollTo(0,ypos);
+
     }) 
     $("#body").on('click', 'button#page-create-back-button', function(){ 
         $("#leftbar-container").html("")
@@ -486,7 +508,7 @@ function connectTwitterModal(address, passphrase){
                     var msg = dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()
                        
                     signMessage(address, passphrase, msg, function(sig){
-                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 15 minutes to create link after Direct Message is sent.</div>")
                         
                         $('#link-twitter-about-tooltip').tooltip()
                         

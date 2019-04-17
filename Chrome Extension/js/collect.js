@@ -88,8 +88,11 @@ function pageCollectInventoryXchain(address, data){
     getXchainBalances(address, function(data_xchain) {
 
             collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
+            
+            collection += "<div align='right' style='margin: -50px 0 0 0;'><input id='imageToggle' type='checkbox' data-toggle='toggle' data-on='Images On' data-off='Images Off' data-size='mini' checked></div>"
+            
 
-            collection += "<div class='row' style='margin: -30px 0 0 0;'>"
+            collection += "<div class='row' style='margin: 12px 0 0 0;'>"
 
             //console.log(data)
 
@@ -162,8 +165,8 @@ function pageCollectInventoryXchain(address, data){
 
                 collectionEntry = ""
                 collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
-                collectionEntry += "<div align='center' style='margin: auto;'><div style=''><img class='lozad' data-src='"+cardImage+"' width='120px'></div>"
-                collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 8px 8px 0 8px;'>"+display_name+"</div>"
+                collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='display: inline-block; width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
+                collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 0 8px 0 8px;'>"+display_name+"</div>"
                 collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
 
@@ -189,22 +192,32 @@ function pageCollectInventoryXchain(address, data){
 
             $("#page-container-collect-content").html(collection)
 
-            const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+            //const observer = lozad(); // lazy loads elements with default selector as '.lozad'
             observer.observe();
+        
+            $('#imageToggle').bootstrapToggle()
 
     })
 
 }
 
 
-function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias){
+function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias, ypos){
     
-    $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
-    
+    //$("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
+    $("#page-container-collect-assetview").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
+
+    //$("#page-container-collect-content").show()
     $("#page-container-collect").hide()
-    $("#page-container-collect-content").show()
     
-    $("#leftbar-container").html("<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' type='button' class='btn btn-back'><i class='fa fa-arrow-left fa-2x'></i></button></div>")
+    $("#page-container-collect-content").hide()
+    $("#page-container-collect-assetview").show()
+    
+    console.log(ypos)
+    
+    var backButton = "<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' type='button' class='btn btn-back' data-ypos='"+ypos+"'><i class='fa fa-arrow-left fa-2x'></i></button></div>"
+    
+    $("#leftbar-container").html(backButton)
       
     var assetInfo = ""
     var twitterAlias = ""
@@ -281,7 +294,11 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
 
                     assetInfo += "</div></div></div></div>"
 
-                    $("#page-container-collect-content").html(assetInfo)
+                    
+                    
+                    //$("#page-container-collect-content").html(assetInfo)
+                    $("#page-container-collect-assetview").html(assetInfo)
+                    
 
                 })
             })  

@@ -7,6 +7,9 @@ const min_tx_fee = 0.000001
 
 var BC_API_TOKEN = false
 
+const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+
+
 
 function isValidAddress(address) {
       
