@@ -235,7 +235,7 @@ function initInventory(passphrase, address){
     
     checkRegistry(address, function(registry){
         if(!registry.error){
-            $("#header-address").append("<div id='header-address-twitter' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
+            $("#header-address").append("<div id='header-address-twitter-link' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
         } else {
             $("#header-address").append("<div id='header-address-twitter-link' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'><i class='fa fa-twitter'></i></div>")
         }

@@ -196,14 +196,15 @@ $( document ).ready(function() {
         balanceClickModal($("#body").data("address"))
     }) 
     
-    $(document).on('click', '#header-address-twitter', function(){ 
-        
-        disconnectTwitterModal($(this).data("twitter"), $("#body").data("address"), $("#body").data("passphrase"))
-       
-    }) 
     
     $(document).on('click', '#header-address-twitter-link', function(){
-        connectTwitterModal($("#body").data("address"), $("#body").data("passphrase"))
+        
+        if($("#header-address-twitter-link").data("twitter")){
+            disconnectTwitterModal($(this).data("twitter"), $("#body").data("address"), $("#body").data("passphrase"))
+        } else {
+            connectTwitterModal($("#body").data("address"), $("#body").data("passphrase"))
+        }
+        
     })
     
     //container-collect-issuer-twitter
@@ -497,7 +498,7 @@ function checkRegistry(address, callback){
 function connectTwitterModal(address, passphrase){
     
     var connectTwitterDialog = new BootstrapDialog({
-            title: 'Link Twitter',
+            title: 'Twitter',
             cssClass: "modal-nofade",
             closable: false,
 //            message: $('<div></div>').load('modal/dialog-twitter-connect.html'),
@@ -515,7 +516,7 @@ function connectTwitterModal(address, passphrase){
                         
 //                        $('#link-twitter-about-tooltip').tooltip()
 //                        dialogItself.getButton('connect-twitter-btn').hide() 
-                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<p class='lead'>Once linked, the Freeport app will display your twitter username to any users that view assets created from your address.</p><p style='font-style: italic;'>May take several minutes to establish link.</p>")
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<p class='lead'>Freeport will display your twitter username alongside assets created from your address.</p><p style='font-style: italic;'>May take several minutes to establish link.</p>")
                         var shareText = encodeURI("Verifying my @FreeportApp creator address.")+"%0A%0A"+"Address:"+address+"%0A"+"Signature:"+encodeURI(sig)
                         var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
                         window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
@@ -536,13 +537,23 @@ function connectTwitterModal(address, passphrase){
 
                     dialogItself.close()
                     
-//                    var checkRegistryInterval = setInterval(function(){
+//                    var counter = 0
+//                    
+//                    var checkRegistryInterval = setInterval(function(){  
+//                        console.log("testing interval...")
 //                        checkRegistry(address, function(registry){
-//                            if(!registry.error){
-//                                $("#header-address").append("<div id='header-address-twitter' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
+//                            if(!registry.error && $("#body").data("address") == address){
+//                                $("#header-address-twitter-link").html("@"+registry.twitter.username+" <i class='fa fa-twitter'></i>")
+//                                $("#header-address-twitter-link").data("twitter", registry.twitter.username)
 //                                
 //                                clearInterval(checkRegistryInterval)
-//                            } 
+//                            }
+//                            
+//                            counter++
+//                            if(counter >= 5){
+//                                clearInterval(checkRegistryInterval)
+//                            }
+//
 //                        })
 //                    }, 60000);
 
