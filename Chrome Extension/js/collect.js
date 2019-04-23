@@ -83,7 +83,7 @@ function pageCollectInventoryXchain(address, data){
 
     var collection = ""
     var collectionUnknown = ""
-    var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name
+    var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name, cardFreeport
 
     getXchainBalances(address, function(data_xchain) {
 
@@ -133,9 +133,8 @@ function pageCollectInventoryXchain(address, data){
                 cardQty = data_xchain['data'][i]['quantity']
                 cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
                 cardAlias = ""
+                cardFreeport = false
                 
-                
-
                 if(digirareImageArray[cardName]){
                     cardImage = digirareImageArray[cardName]
                 } else {
@@ -143,6 +142,7 @@ function pageCollectInventoryXchain(address, data){
                     if(cardDescription.length >= 16){
                         var checkImgur = cardDescription.substring(0, 5);
                         if(checkImgur == "imgur"){
+                            cardFreeport = true
                             var descArray = cardDescription.split(";");
                             cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
                             cardAlias = descArray[1]
@@ -150,17 +150,17 @@ function pageCollectInventoryXchain(address, data){
                     }
                 } 
 
-                if(data_xchain['data'][i]['asset_longname'] == ""){
-                    display_name = data_xchain['data'][i]['asset']
-                } else {
-                    display_name = data_xchain['data'][i]['asset_longname']
-                } 
-
-
-                if(cardAlias.length > 0){
+                if(cardFreeport){
                     display_name = cardAlias
-                    cardAlias = encodeURIComponent(cardAlias).replace("'", "%27");
-                    cardDescription = encodeURIComponent(cardDescription).replace("'", "%27");
+                    cardAlias = encodeURIComponent(cardAlias).replace("'", "%27")
+                    cardDescription = encodeURIComponent(cardDescription).replace("'", "%27")
+                } else {
+                    if(data_xchain['data'][i]['asset_longname'] == ""){
+                        display_name = data_xchain['data'][i]['asset']
+                    } else {
+                        display_name = data_xchain['data'][i]['asset_longname']
+                    }  
+                    cardAlias = display_name
                 }
 
                 collectionEntry = ""

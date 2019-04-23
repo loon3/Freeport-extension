@@ -44,7 +44,7 @@ $( document ).ready(function() {
         pageCreateManage($("#body").data("address"))
     })
     
-    $("#page-collect-search-select").on('click', function(){
+    $("#page-container-collect-content").on('click', 'div#page-collect-search-select', function(){
         pageCollectSearchModal()
     })
     
@@ -113,6 +113,7 @@ $( document ).ready(function() {
         window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
     }) 
     
+
     $("#page-container-create").on('click', 'li#page-container-create-new-button', function(){ 
         chrome.storage.local.get(['fee_custom'], function(result) {
             
@@ -206,7 +207,7 @@ $( document ).ready(function() {
     })
     
     //container-collect-issuer-twitter
-    $("#page-container-collect-content").on('click', 'div#container-collect-issuer-twitter', function(){ 
+    $("#page-container-collect-assetview").on('click', 'div#container-collect-issuer-twitter', function(){ 
         var twitterUsername = $(this).data("twitter")
         var url = "http://twitter.com/"+twitterUsername
         window.open(url, '_blank', "width=800,height=600,top=50,left=50")
@@ -470,6 +471,7 @@ function manualSignMessageModal(address, passphrase){
                 action: function(dialogItself) {  
 
                     dialogItself.close()
+                    
 
                 }
             }]
@@ -498,21 +500,29 @@ function connectTwitterModal(address, passphrase){
             title: 'Link Twitter',
             cssClass: "modal-nofade",
             closable: false,
-            message: $('<div></div>').load('modal/dialog-twitter-connect.html'),
+//            message: $('<div></div>').load('modal/dialog-twitter-connect.html'),
+            message: $('<div></div>').load('modal/dialog-twitter-connect-share.html'),
             buttons: [{
                 id: 'connect-twitter-btn',
-                label: 'Link',
-                cssClass: 'btn-info',
+                label: 'Continue',
+                cssClass: 'btn-success',
                 action: function(dialogItself) {
 
                     var msg = dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()
                        
                     signMessage(address, passphrase, msg, function(sig){
-                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 15 minutes to create link after Direct Message is sent.</div>")
+//                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 15 minutes to create link after Direct Message is sent.</div>")
                         
-                        $('#link-twitter-about-tooltip').tooltip()
+//                        $('#link-twitter-about-tooltip').tooltip()
+//                        dialogItself.getButton('connect-twitter-btn').hide() 
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<p class='lead'>Once linked, the Freeport app will display your twitter username to any users that view assets created from your address.</p><p style='font-style: italic;'>May take several minutes to establish link.</p>")
+                        var shareText = encodeURI("Verifying my @FreeportApp creator address.")+"%0A%0A"+"Address:"+address+"%0A"+"Signature:"+encodeURI(sig)
+                        var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
+                        window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
                         
                         dialogItself.getButton('connect-twitter-btn').hide() 
+
+                        //dialogItself.close()
                     })
                      
 
@@ -525,6 +535,17 @@ function connectTwitterModal(address, passphrase){
                 action: function(dialogItself) {  
 
                     dialogItself.close()
+                    
+//                    var checkRegistryInterval = setInterval(function(){
+//                        checkRegistry(address, function(registry){
+//                            if(!registry.error){
+//                                $("#header-address").append("<div id='header-address-twitter' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
+//                                
+//                                clearInterval(checkRegistryInterval)
+//                            } 
+//                        })
+//                    }, 60000);
+
 
                 }
             }]

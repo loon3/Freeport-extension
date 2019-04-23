@@ -30,3 +30,5 @@ v0.2.4 - Image Anchors
 v0.2.5 - Allow spending from unspent UTXOs
 
 v0.2.6 - Link Twitter username to address
+
+v0.2.7 - UX improvement, update Twitter link method
