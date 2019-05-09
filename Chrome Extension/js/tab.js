@@ -509,15 +509,18 @@ function connectTwitterModal(address, passphrase){
                 cssClass: 'btn-success',
                 action: function(dialogItself) {
 
-                    var msg = dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()
+                    var msg = (dialogItself.getModalBody().find('#dialogTwitterConnect-handle').val()).toLowerCase()
                        
                     signMessage(address, passphrase, msg, function(sig){
 //                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 15 minutes to create link after Direct Message is sent.</div>")
                         
 //                        $('#link-twitter-about-tooltip').tooltip()
 //                        dialogItself.getButton('connect-twitter-btn').hide() 
+                        
+                        var sig_encoded = encodeURI(sig).replace("+", "%2B");
+                    
                         dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<p class='lead'>Freeport will display your twitter username alongside assets created from your address.</p><p style='font-style: italic;'>May take several minutes to establish link.</p>")
-                        var shareText = encodeURI("Verifying my @FreeportApp creator address.")+"%0A%0A"+"Address:"+address+"%0A"+"Signature:"+encodeURI(sig)
+                        var shareText = encodeURI("Verifying my @FreeportApp creator address.")+"%0A%0A"+"Address:"+address+"%0A"+"Signature:"+sig_encoded
                         var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
                         window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
                         
@@ -590,7 +593,7 @@ function disconnectTwitterModal(user, address, passphrase){
                 action: function(dialogItself) {
 
                     signMessage(address, passphrase, user, function(sig){
-                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>UNLINK_ADDRESS:"+address+";UNLINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 30 minutes to update after Direct Message is sent.</div>")
+                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>UNLINK_ADDRESS:"+address+";UNLINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take several minutes to update after Direct Message is sent.</div>")
                         
                         dialogItself.getButton('connect-twitter-btn').hide() 
                     })
