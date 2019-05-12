@@ -7,7 +7,7 @@ function pageCreateManage(address){
     
     var source_html = "https://xchain.io/api/issuances/"+address
     var collection = ""
-    var cardImage
+    var cardImage, cardDivisible
     var assetArray = []
     
     $.getJSON( source_html, function( data ) { 
@@ -21,7 +21,7 @@ function pageCreateManage(address){
         
             for(var i=0; i < data.data.length; i++){
 
-                if(assetArray.indexOf(data.data[i]['asset']) == -1){
+                if(assetArray.indexOf(data.data[i]['asset']) == -1  && data.data[i]['description'] != "LOCK"){
 
                     assetArray.push(data.data[i]['asset']);
 
@@ -38,11 +38,13 @@ function pageCreateManage(address){
                             cardAlias = descArray[1]
                         }
                     }
+                    
+                    cardDivisible = data.data[i]['divisible']
 
                     if(data.data[i]['locked']){
                         var lockedButton = "<button type='button' class='btn btn-info btn-block asset-lock-button' disabled><i class='fa fa-lock' aria-hidden='true'></i> Locked</button>"
                     } else {
-                        var lockedButton = "<button type='button' class='btn btn-info btn-block asset-lock-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"'><i class='fa fa-unlock' aria-hidden='true'></i> Unlocked</button>"
+                        var lockedButton = "<button type='button' class='btn btn-info btn-block asset-lock-button' data-asset='"+data.data[i]['asset']+"' data-alias='"+cardAlias+"' data-divisible='"+cardDivisible+"'><i class='fa fa-unlock' aria-hidden='true'></i> Unlocked</button>"
                     }
                     
                     if(anchors[data.data[i]['asset']]){
