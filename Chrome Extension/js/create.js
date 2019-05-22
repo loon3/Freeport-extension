@@ -79,8 +79,12 @@ function lockAssetModal(asset, alias, address, divisible, fee_custom){
     
     feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
-    
+        var btc_usdRate = $("#body").data("usd_btc")
+	   var fee_recommended_priority_usdRate = (parseFloat(fee_recommended_priority) * parseFloat(btc_usdRate)).toFixed(2) 
+   var fee_recommended_economy_usdRate = (parseFloat(fee_recommended_economy) * parseFloat(btc_usdRate)).toFixed(2) 
+
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC / $"+fee_recommended_priority_usdRate+"</b></button></div><div class='col-6'><button class='btn btn-primary btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC / $"+fee_recommended_economy_usdRate+"</b></button></div><div class='col-12 small' style='font-style: italic; padding-top: 20px;'>Fees are paid in BTC, equivalent amount in USD for reference only.</div></div>"
+
      var lockAssetDialog = new BootstrapDialog({
             title: "Lock Asset",
             cssClass: "modal-nofade",
@@ -146,8 +150,12 @@ function anchorImageModal(asset, alias, address, message, fee_custom){
     
     feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
-    
+    var btc_usdRate = $("#body").data("usd_btc")
+	   var fee_recommended_priority_usdRate = (parseFloat(fee_recommended_priority) * parseFloat(btc_usdRate)).toFixed(2) 
+   var fee_recommended_economy_usdRate = (parseFloat(fee_recommended_economy) * parseFloat(btc_usdRate)).toFixed(2) 
+
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC / $"+fee_recommended_priority_usdRate+"</b></button></div><div class='col-6'><button class='btn btn-primary btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC / $"+fee_recommended_economy_usdRate+"</b></button></div><div class='col-12 small' style='font-style: italic; padding-top: 20px;'>Fees are paid in BTC, equivalent amount in USD for reference only.</div></div>"
+   
      var anchorImageDialog = new BootstrapDialog({
             title: "Anchor Image",
             cssClass: "modal-nofade",
@@ -296,7 +304,11 @@ function issueAssetModal(assetid, fee_custom){
     
     feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
+      var btc_usdRate = $("#body").data("usd_btc")
+	   var fee_recommended_priority_usdRate = (parseFloat(fee_recommended_priority) * parseFloat(btc_usdRate)).toFixed(2) 
+   var fee_recommended_economy_usdRate = (parseFloat(fee_recommended_economy) * parseFloat(btc_usdRate)).toFixed(2) 
+
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC / $"+fee_recommended_priority_usdRate+"</b></button></div><div class='col-6'><button class='btn btn-primary btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC / $"+fee_recommended_economy_usdRate+"</b></button></div><div class='col-12 small' style='font-style: italic; padding-top: 20px;'>Fees are paid in BTC, equivalent amount in USD for reference only.</div></div>"
 
         var btcbalance = $("#body").data("balance_btc")
 
