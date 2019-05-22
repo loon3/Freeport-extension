@@ -77,13 +77,9 @@ function pageCreateManage(address){
 
 function lockAssetModal(asset, alias, address, divisible, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
     
      var lockAssetDialog = new BootstrapDialog({
             title: "Lock Asset",
@@ -148,13 +144,9 @@ function lockAssetModal(asset, alias, address, divisible, fee_custom){
 
 function anchorImageModal(asset, alias, address, message, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
     
      var anchorImageDialog = new BootstrapDialog({
             title: "Anchor Image",
@@ -302,13 +294,9 @@ function uploadImgurModal_test(){
 
 function issueAssetModal(assetid, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
+        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC</b></button></div><div class='col-6'><button class='btn btn-info btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC</b></button></div></div>"
 
         var btcbalance = $("#body").data("balance_btc")
 
