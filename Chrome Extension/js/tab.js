@@ -214,8 +214,19 @@ $( document ).ready(function() {
         window.open(url, '_blank', "width=800,height=600,top=50,left=50")
     }) 
     
-    $(document).on("click", 'button#substitute-defaultfee-button', function (event) { 
-        feeRecommendedCallback(function(fee_recommended){
+    $(document).on("click", 'button.substitute-defaultfee-button', function (event) { 
+
+	var feetype = $(this).data("feetype")
+console.log(feetype)
+		
+        feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
+
+		if(feetype == "priority"){
+			var fee_recommended = fee_recommended_priority
+		}else{
+			var fee_recommended = fee_recommended_economy
+		}
+
             $("#body").data("fee_btc", fee_recommended)    
             $(".dialog-transfee").html(fee_recommended)
             $(".dialog-txfeebutton").hide() 
