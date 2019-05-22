@@ -11,6 +11,16 @@ const observer = lozad(); // lazy loads elements with default selector as '.loza
 
 
 
+function getBtcUsdRate(callback){
+
+    var source_html = "https://api.coindesk.com/v1/bpi/currentprice.json"
+       
+    $.getJSON( source_html, function( data ) {
+        callback(data.bpi.USD.rate_float)
+    })
+
+}
+
 function isValidAddress(address) {
       
     try {
@@ -171,6 +181,36 @@ function feeRecommendedCallback(callback){
     chrome.storage.local.get(['fee_recommended'], function(result) {        
         callback(result.fee_recommended)
     })
+}
+
+
+function getFeeUpdate2(callback){
+    var source_html = "https://blockstream.info/api/fee-estimates" 
+    $.getJSON( source_html, function( data ) {  
+       var fee_recommended_priority = (parseInt(data["2"]) * default_txsize_byte) / 100000000
+	  var fee_recommended_economy = (parseInt(data["144"]) * default_txsize_byte) / 100000000
+
+        chrome.storage.local.set({fee_recommended_priority: fee_recommended_priority, fee_recommended_economy: fee_recommended_economy}, function() {  
+            chrome.storage.local.get(['fee_custom'], function(result) {
+                if(!result.fee_custom){   
+                    chrome.storage.local.set({fee_custom: fee_recommended_priority})
+                    callback(fee_recommended_priority, fee_recommended_priority, fee_recommended_economy)
+                } else {
+                    callback(result.fee_custom, fee_recommended_priority, fee_recommended_economy)
+                }   
+                
+            })
+        });   
+    })  
+}
+
+function feeRecommendedCallback2(callback){ 
+    chrome.storage.local.get(['fee_recommended_priority'], function(resultp) {      
+	chrome.storage.local.get(['fee_recommended_economy'], function(resulte) {          
+        callback(resultp.fee_recommended_priority, resulte.fee_recommended_economy)
+    	})
+    })
+
 }
 
 function getutxos(add_from, mnemonic, amountremaining, callback){
