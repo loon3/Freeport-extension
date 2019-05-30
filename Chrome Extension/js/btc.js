@@ -183,16 +183,12 @@ function feeRecommendedCallback(callback){
     })
 }
 
-
 function getFeeUpdate2(callback){
-//    var source_html = "https://blockstream.info/api/fee-estimates" 
     var source_html = "https://api.blockcypher.com/v1/btc/main"
     $.getJSON( source_html, function( data ) {  
-//      var fee_recommended_priority = (parseInt(data["2"]) * default_txsize_byte) / 100000000
-//	var fee_recommended_economy = (parseInt(data["144"]) * default_txsize_byte) / 100000000
 
         var fee_recommended_priority = (parseInt(parseInt(data.high_fee_per_kb)/1000) * default_txsize_byte) / 100000000
-	var fee_recommended_economy = (parseInt(parseInt(data.low_fee_per_kb)/1000) * default_txsize_byte) / 100000000
+        var fee_recommended_economy = (parseInt(parseInt(data.low_fee_per_kb)/1000) * default_txsize_byte) / 100000000
 
         chrome.storage.local.set({fee_recommended_priority: fee_recommended_priority, fee_recommended_economy: fee_recommended_economy}, function() {  
             chrome.storage.local.get(['fee_custom'], function(result) {
@@ -202,7 +198,7 @@ function getFeeUpdate2(callback){
                 } else {
                     callback(result.fee_custom, fee_recommended_priority, fee_recommended_economy)
                 }   
-                
+
             })
         });   
     })  

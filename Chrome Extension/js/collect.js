@@ -226,7 +226,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     assetInfo += "<div align= 'center' style='position: relative; top: -30px; background-color: #38444f;'>Asset Information</div>"
     assetInfo += "<div style='padding: 0 15px 0 15px;'>"
-    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div></div>"
+    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Sell (Soon!)</button></div></div>"
     
     //<div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Gift (Soon!)</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Bonus (Soon!)</button></div>
     
@@ -369,15 +369,13 @@ function pageCollectSearchModal(){
 //})
 
 
+
 function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
     
     feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-	   var btc_usdRate = $("#body").data("usd_btc")
-	   var fee_recommended_priority_usdRate = (parseFloat(fee_recommended_priority) * parseFloat(btc_usdRate)).toFixed(2) 
-   var fee_recommended_economy_usdRate = (parseFloat(fee_recommended_economy) * parseFloat(btc_usdRate)).toFixed(2) 
-
-        var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC / $"+fee_recommended_priority_usdRate+"</b></button></div><div class='col-6'><button class='btn btn-primary btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~1 day)<br><b>"+fee_recommended_economy+" BTC / $"+fee_recommended_economy_usdRate+"</b></button></div><div class='col-12 small' style='font-style: italic; padding-top: 20px;'>Fees are paid in BTC, equivalent amount in USD for reference only.</div></div>"
+        var txfeebutton = addFeeButtons(fee_recommended_priority, fee_recommended_economy)
+                            
 
         var btcbalance = $("#body").data("balance_btc")
 
@@ -403,6 +401,8 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                             }
 
                             $(this).find(".dialog-transfee").html(fee_custom)
+                            
+                            
                             $(this).find('.dialog-txfeebutton').html(txfeebutton)
 
                         })
