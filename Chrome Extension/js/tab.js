@@ -649,8 +649,6 @@ function balanceClickModal(currentaddr){
 function txFeeModal(){   
     
     var txfee = $("#body").data("fee_btc")
-    var default_fee = $("#body").data("fee_btc_recommended")
-    
 
     var txFeeDialog = new BootstrapDialog({
         title: "BTC Tx Fee",
@@ -658,7 +656,6 @@ function txFeeModal(){
         message: function(dialog){
                 var $message = $('<div></div>').load('modal/dialog-txfee.html', function(){
                     $(this).find("#dialogTxFee-current").html(txfee)
-                    $(this).find("#dialogTxFee-default").html(default_fee)
                 })
                 
                 return $message
