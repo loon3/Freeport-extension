@@ -248,14 +248,17 @@ function initInventory(passphrase, address){
         $("#page-container-collect-content").show()
 
         $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
-
-        getFeeUpdate(function(fee, feeRecommended){
+	 getBtcUsdRate(function(usdRate){
+		$("#body").data("usd_btc", usdRate)
+	
+        getFeeUpdate2(function(fee, feeRecommendedPriority, feeRecommendedEconomy){
             getAddressBalance(address, function(data){
                 var balance = parseInt(data.balance) / 100000000
 
                 $("#body").data("balance_btc", data.balance)
                 $("#body").data("fee_btc", fee)
-                $("#body").data("fee_btc_recommended", feeRecommended)
+                $("#body").data("fee_btc_recommended_priority", feeRecommendedPriority)
+			$("#body").data("fee_btc_recommended_economy", feeRecommendedEconomy)
 
                 $("#header-balance-btc").html(balance)
 
@@ -270,7 +273,7 @@ function initInventory(passphrase, address){
                 idleCheck()
             })
         })
-
+	})
     })
         
     

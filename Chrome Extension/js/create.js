@@ -77,14 +77,11 @@ function pageCreateManage(address){
 
 function lockAssetModal(asset, alias, address, divisible, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
-    
+        var txfeebutton = addFeeButtons(fee_recommended_priority, fee_recommended_economy)
+        
+
      var lockAssetDialog = new BootstrapDialog({
             title: "Lock Asset",
             cssClass: "modal-nofade",
@@ -148,15 +145,11 @@ function lockAssetModal(asset, alias, address, divisible, fee_custom){
 
 function anchorImageModal(asset, alias, address, message, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
-    
-     var anchorImageDialog = new BootstrapDialog({
+        var txfeebutton = addFeeButtons(fee_recommended_priority, fee_recommended_economy)
+        
+        var anchorImageDialog = new BootstrapDialog({
             title: "Anchor Image",
             cssClass: "modal-nofade",
             message: function(dialog){
@@ -302,14 +295,10 @@ function uploadImgurModal_test(){
 
 function issueAssetModal(assetid, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
-
+        var txfeebutton = addFeeButtons(fee_recommended_priority, fee_recommended_economy)
+        
         var btcbalance = $("#body").data("balance_btc")
 
         var assetIssueDialog = new BootstrapDialog({

@@ -239,7 +239,7 @@ function createIssuance_opreturn(add_from, assetid, quantity, divisible, descrip
             var key = bitcoinjs.ECPair.fromWIF(privkey, NETWORK);
             tx.sign(0, key);
 
-            var final_trans = tx.build().toHex();
+            var final_trans = tx.buildIncomplete().toHex();
 
             callback(final_trans)  //push raw tx to the bitcoin network
 

@@ -214,8 +214,19 @@ $( document ).ready(function() {
         window.open(url, '_blank', "width=800,height=600,top=50,left=50")
     }) 
     
-    $(document).on("click", 'button#substitute-defaultfee-button', function (event) { 
-        feeRecommendedCallback(function(fee_recommended){
+    $(document).on("click", 'button.substitute-defaultfee-button', function (event) { 
+
+	var feetype = $(this).data("feetype")
+console.log(feetype)
+		
+        feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
+
+		if(feetype == "priority"){
+			var fee_recommended = fee_recommended_priority
+		}else{
+			var fee_recommended = fee_recommended_economy
+		}
+
             $("#body").data("fee_btc", fee_recommended)    
             $(".dialog-transfee").html(fee_recommended)
             $(".dialog-txfeebutton").hide() 
@@ -638,8 +649,6 @@ function balanceClickModal(currentaddr){
 function txFeeModal(){   
     
     var txfee = $("#body").data("fee_btc")
-    var default_fee = $("#body").data("fee_btc_recommended")
-    
 
     var txFeeDialog = new BootstrapDialog({
         title: "BTC Tx Fee",
@@ -647,7 +656,6 @@ function txFeeModal(){
         message: function(dialog){
                 var $message = $('<div></div>').load('modal/dialog-txfee.html', function(){
                     $(this).find("#dialogTxFee-current").html(txfee)
-                    $(this).find("#dialogTxFee-default").html(default_fee)
                 })
                 
                 return $message
@@ -699,6 +707,15 @@ function txFeeModal(){
     txFeeDialog.open()    
 }
 
+function addFeeButtons(fee_recommended_priority, fee_recommended_economy){
+    var btc_usdRate = $("#body").data("usd_btc")
+    var fee_recommended_priority_usdRate = (parseFloat(fee_recommended_priority) * parseFloat(btc_usdRate)).toFixed(2) 
+    var fee_recommended_economy_usdRate = (parseFloat(fee_recommended_economy) * parseFloat(btc_usdRate)).toFixed(2) 
+
+    var txfeebutton = "<div style='padding: 20px;' class='row'><div class='col-6'><button class='substitute-defaultfee-button btn btn-danger btn-sm' data-feetype='priority'>Use priority fee (~20 min)<br><b>"+fee_recommended_priority+" BTC / $"+fee_recommended_priority_usdRate+"</b></button></div><div class='col-6'><button class='btn btn-primary btn-sm substitute-defaultfee-button' data-feetype='economy'>Use economy fee (~3 hrs)<br><b>"+fee_recommended_economy+" BTC / $"+fee_recommended_economy_usdRate+"</b></button></div><div class='col-12 small' style='font-style: italic; padding-top: 20px;'>Fees are paid in BTC, equivalent amount in USD for reference only.</div></div>"
+    
+    return txfeebutton
+}
 
 function startWebsocket(address, bc_token){
     

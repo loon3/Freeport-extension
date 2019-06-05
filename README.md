@@ -34,3 +34,5 @@ v0.2.6 - Link Twitter username to address
 v0.2.7 - UX improvement, update Twitter link method
 
 v0.2.8 - Fix lock divisible asset bug
+
+v0.2.9 - Add priority and economy fee estimates

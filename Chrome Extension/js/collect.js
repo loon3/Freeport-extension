@@ -226,7 +226,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     assetInfo += "<div align= 'center' style='position: relative; top: -30px; background-color: #38444f;'>Asset Information</div>"
     assetInfo += "<div style='padding: 0 15px 0 15px;'>"
-    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div></div>"
+    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Sell (Soon!)</button></div></div>"
     
     //<div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Gift (Soon!)</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Bonus (Soon!)</button></div>
     
@@ -369,15 +369,13 @@ function pageCollectSearchModal(){
 //})
 
 
+
 function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
     
-    feeRecommendedCallback(function(fee_recommended){
+    feeRecommendedCallback2(function(fee_recommended_priority, fee_recommended_economy){
         
-        if(fee_recommended != fee_custom){
-            var txfeebutton = "<div style='padding: 20px;'><button id='substitute-defaultfee-button' class='btn btn-warning btn-sm'>Click to replace with recommended fee<br><b>"+fee_recommended+" BTC</b></button></div>"
-        } else {
-            var txfeebutton = ""
-        }
+        var txfeebutton = addFeeButtons(fee_recommended_priority, fee_recommended_economy)
+                            
 
         var btcbalance = $("#body").data("balance_btc")
 
@@ -403,6 +401,8 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                             }
 
                             $(this).find(".dialog-transfee").html(fee_custom)
+                            
+                            
                             $(this).find('.dialog-txfeebutton').html(txfeebutton)
 
                         })
