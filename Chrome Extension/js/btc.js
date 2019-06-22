@@ -404,7 +404,7 @@ function getUnconfirmed(address, callback){
                     callback(txs_parsed)
                 })
 
-            }).error(function() { callback(0) })
+            }).fail(function() { callback(0) })
         
         }, 1000)
 }

@@ -5,7 +5,7 @@
 
 $( document ).ready(function() {  
     
-    $(".jumbotron-tab-container").hide()
+    $(".jumbotron-tab-container").addClass("hide")
     
     checkPassphrase() 
     
@@ -59,9 +59,9 @@ $( document ).ready(function() {
     $("#page-container-collect-content").on('change', 'input#imageToggle', function(){ 
         //console.log($(this).is(":checked"))
         if($(this).is(":checked")){
-            $(".collection-asset-images").show()
+            $(".collection-asset-images").removeClass("hide")
         } else {
-            $(".collection-asset-images").hide()
+            $(".collection-asset-images").addClass("hide")
         }
     }) 
     
@@ -138,8 +138,8 @@ $( document ).ready(function() {
     $("#body").on('click', 'button#page-inventory-back-button', function(){ 
         $("#leftbar-container").html("")
 //        pageCollectInventory($("#body").data("address"))
-        $("#page-container-collect-assetview").hide()
-        $("#page-container-collect-content").show()
+        $("#page-container-collect-assetview").addClass("hide")
+        $("#page-container-collect-content").removeClass("hide")
         var ypos = $(this).data("ypos")
         window.scrollTo(0,ypos);
 
@@ -229,7 +229,7 @@ console.log(feetype)
 
             $("#body").data("fee_btc", fee_recommended)    
             $(".dialog-transfee").html(fee_recommended)
-            $(".dialog-txfeebutton").hide() 
+            $(".dialog-txfeebutton").addClass("hide") 
   
             chrome.storage.local.set({'fee_custom': fee_recommended}, function() {
                 console.log("Tx fee set to "+fee_recommended)
@@ -296,7 +296,7 @@ console.log(feetype)
     
     $("body").on('change', '#imgur-file-upload[type=file]', function(){ 
         
-        $("#dialogIssueAsset-imgur-file-upload-container").hide()
+        $("#dialogIssueAsset-imgur-file-upload-container").addClass("hide")
         $("#dialogIssueAsset-imgur-file-upload-spinner").html("<i class='fa fa-spinner fa-spin fa-3x fa-fw'></i>")
 
         var dom = this
@@ -307,10 +307,10 @@ console.log(feetype)
                 console.log(data)
                 if(data.success){
 
-                    $("#dialogIssueAsset-imgur-file-upload-spinner").hide()
+                    $("#dialogIssueAsset-imgur-file-upload-spinner").addClass("hide")
 
-                    $("#dialogIssueAsset-form-container").show()
-                    $("#dialogIssueAsset-header").show()
+                    $("#dialogIssueAsset-form-container").removeClass("hide")
+                    $("#dialogIssueAsset-header").removeClass("hide")
 
                     $("#dialogIssueAsset-image-container").html("<img src='"+data.message+"' style='width: 100%; max-width: 400px;'>")
                     $("#dialogIssueAsset-image").val(data.message)
@@ -328,11 +328,11 @@ console.log(feetype)
 
 function gotoTab(tabTitle){
     $("#leftbar-container").html("")
-    $("#buttonsplash").hide()
+    $("#buttonsplash").addClass("hide")
     document.title = tabTitle.charAt(0).toUpperCase() + tabTitle.slice(1) + " - Freeport"
-    $(".jumbotron-tab-container").hide()
-    $(".jumbotron-tab-container-content").hide()
-    $("#page-container-"+tabTitle).show()
+    $(".jumbotron-tab-container").addClass("hide")
+    $(".jumbotron-tab-container-content").addClass("hide")
+    $("#page-container-"+tabTitle).removeClass("hide")
     $(".nav-item").removeClass("active")
     $("#nav-"+tabTitle).parent().addClass("active")
     
@@ -381,9 +381,9 @@ function ipfsInit(){
 
 function buttonSplash(){
     document.title = "Welcome to Freeport"
-    $(".jumbotron-tab-container").hide()
-    $(".jumbotron-tab-container-content").hide()
-    $("#buttonsplash").show()
+    $(".jumbotron-tab-container").addClass("hide")
+    $(".jumbotron-tab-container-content").addClass("hide")
+    $("#buttonsplash").removeClass("hide")
     $(".nav-item").removeClass("active")
 }
 
@@ -501,7 +501,7 @@ function checkRegistry(address, callback){
     
     $.getJSON( source_html, function( data ) {
         callback(data)
-    }).error(function(){
+    }).fail(function(){
         callback(noresult)
     })
 }
@@ -526,7 +526,7 @@ function connectTwitterModal(address, passphrase){
 //                        dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a> <div id='link-twitter-about-tooltip' style='display: inline-block;' data-toggle='tooltip' data-placement='right' title='Below is your Twitter Username signed by your Collection Address. Freeport will store this in a public record for collectors to verify you as an asset creator.'><i class='fa fa-question-circle-o fa-1' aria-hidden='true'></i></div></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>LINK_ADDRESS:"+address+";LINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take up to 15 minutes to create link after Direct Message is sent.</div>")
                         
 //                        $('#link-twitter-about-tooltip').tooltip()
-//                        dialogItself.getButton('connect-twitter-btn').hide() 
+//                        dialogItself.getButton('connect-twitter-btn').addClass("hide") 
                         
                         var sig_encoded = encodeURI(sig).replace("+", "%2B");
                     
@@ -535,7 +535,7 @@ function connectTwitterModal(address, passphrase){
                         var shareUrl = "http://twitter.com/intent/tweet?text="+shareText
                         window.open(shareUrl, '_blank', "width=800,height=600,top=50,left=50")
                         
-                        dialogItself.getButton('connect-twitter-btn').hide() 
+                        dialogItself.getButton('connect-twitter-btn').addClass("hide") 
 
                         //dialogItself.close()
                     })
@@ -606,7 +606,7 @@ function disconnectTwitterModal(user, address, passphrase){
                     signMessage(address, passphrase, user, function(sig){
                         dialogItself.getModalBody().find('#dialogTwitterConnect-container').html("<div style='font-weight: bold; padding-bottom: 10px; text-align: left;'>Paste the following text in a Direct Message to <a href='https://twitter.com/FreeportApp' target='_blank'>@FreeportApp</a></div><div style='padding: 10px; background-color:#333;' align='left'><samp style='word-wrap: break-word;'>UNLINK_ADDRESS:"+address+";UNLINK_SIG:"+sig+"</samp></div><div style='font-weight: bold; padding: 10px 0 10px 0; text-align: left;'>May take several minutes to update after Direct Message is sent.</div>")
                         
-                        dialogItself.getButton('connect-twitter-btn').hide() 
+                        dialogItself.getButton('connect-twitter-btn').addClass("hide") 
                     })
                         
                 }

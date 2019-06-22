@@ -94,7 +94,7 @@ function checkPassphrase()
                         passphraseDialogInit.setMessage($message);
                             
                         var $button = this; 
-                        $button.hide();
+                        $button.addClass("hide");
 
                     }
                 }
@@ -243,9 +243,9 @@ function initInventory(passphrase, address){
 
     chrome.storage.local.set({'address': address}, function() {
 
-        $(".jumbotron-tab-container").hide()
-        $(".jumbotron-tab-container-content").hide()
-        $("#page-container-collect-content").show()
+        $(".jumbotron-tab-container").addClass("hide")
+        $(".jumbotron-tab-container-content").addClass("hide")
+        $("#page-container-collect-content").removeClass("hide")
 
         $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
 	 getBtcUsdRate(function(usdRate){
