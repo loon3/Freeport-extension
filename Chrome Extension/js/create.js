@@ -2,8 +2,8 @@ function pageCreateManage(address){
     
     $("#page-container-create-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
     
-    $("#page-container-create").hide()
-    $("#page-container-create-content").show()
+    $("#page-container-create").addClass("hide")
+    $("#page-container-create-content").removeClass("hide")
     
     var source_html = "https://xchain.io/api/issuances/"+address
     var collection = ""
