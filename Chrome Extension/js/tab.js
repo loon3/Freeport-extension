@@ -5,6 +5,7 @@
 
 $( document ).ready(function() {  
     
+   
     $(".jumbotron-tab-container").addClass("hide")
     
     checkPassphrase() 
@@ -325,6 +326,8 @@ console.log(feetype)
        
     
 })
+
+
 
 function gotoTab(tabTitle){
     $("#leftbar-container").html("")

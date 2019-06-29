@@ -1,3 +1,15 @@
+function getBrowser() {
+  if (typeof chrome !== "undefined") {
+    if (typeof browser !== "undefined") {
+      return browser;
+    } else {
+      return chrome;
+    }
+  } 
+}
+
+var thisBrowser = getBrowser()
+
 var bitcoinjs = require('bitcoinjs-lib')
 var bitcoinMessage = require('bitcoinjs-message')
 

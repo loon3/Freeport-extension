@@ -49,7 +49,7 @@ function decryptPassphrase(passphrase_encrypted, password)
 function checkPassphrase()
 {
      
-    chrome.storage.local.get(['passphrase'], function(result) {
+    thisBrowser.storage.local.get(['passphrase'], function(result) {
         
         if(!result.passphrase){
         
@@ -114,7 +114,7 @@ function checkPassphrase()
                         var password_check = dialogItself.getModalBody().find("#password-second").val();
                         if(password.length > 0 && password == password_check){
                             var passphrase_encrypted = encryptPassphrase(mnemonic, password)
-                            chrome.storage.local.set({passphrase: passphrase_encrypted}, function() {
+                            thisBrowser.storage.local.set({passphrase: passphrase_encrypted.toString()}, function() {
                                 initInventory(mnemonic)
                                 dialogItself.close()
                             });
@@ -160,14 +160,14 @@ function unlockInventory(){
                         var password = dialogItself.getModalBody().find('input').val()
 
                         if(password.length > 0){
-                            chrome.storage.local.get(['passphrase'], function(result) {
+                            thisBrowser.storage.local.get(['passphrase'], function(result) {
                                 if(result.passphrase){
                                     var passphrase = localStorage.getItem("mnemonic")          
 
                                     var passphrase_decrypted = decryptPassphrase(result.passphrase, password)
 
                                     if(passphrase_decrypted.status == "success"){   
-                                        chrome.storage.local.get(['address'], function(result) {
+                                        thisBrowser.storage.local.get(['address'], function(result) {
                                             //console.log(result)
                                             if(!result.address){
                                                 initInventory(passphrase_decrypted.passphrase)     
@@ -241,7 +241,7 @@ function initInventory(passphrase, address){
         }
     })
 
-    chrome.storage.local.set({'address': address}, function() {
+    thisBrowser.storage.local.set({'address': address}, function() {
 
         $(".jumbotron-tab-container").addClass("hide")
         $(".jumbotron-tab-container-content").addClass("hide")

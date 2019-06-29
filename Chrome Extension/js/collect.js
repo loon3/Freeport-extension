@@ -165,7 +165,7 @@ function pageCollectInventoryXchain(address, data){
 
                 collectionEntry = ""
                 collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
-                collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='display: inline-block; width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
+                collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
                 collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 0 8px 0 8px;'>"+display_name+"</div>"
                 collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
