@@ -7,11 +7,22 @@ Currently under development.
 
 https://chrome.google.com/webstore/detail/freeport/hbggjmemphljoifppaekgpohndiinfeb
 
-## Install from Github
+## Install from Package (for Firefox users)
 
+https://github.com/loon3/Freeport-extension/raw/dev/packages/freeport-0.3.0-fx.xpi
+
+## Install from Source
+
+#### Chrome
+- Download "Chrome Extension" folder from this repository.
 - Go to chrome://extensions/ in your Chrome browser. 
 - Make sure Developer Mode is selected and click on "Load unpacked" 
 - Select the directory "Chrome Extension".
+
+#### Firefox
+- Download "Chrome Extension" folder from this repository.
+- Install and run via web-ext (https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext)
+
 
 ## Release Notes
 
