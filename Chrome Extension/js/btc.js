@@ -1,3 +1,15 @@
+function getBrowser() {
+  if (typeof chrome !== "undefined") {
+    if (typeof browser !== "undefined") {
+      return browser;
+    } else {
+      return chrome;
+    }
+  } 
+}
+
+var thisBrowser = getBrowser()
+
 var bitcoinjs = require('bitcoinjs-lib')
 var bitcoinMessage = require('bitcoinjs-message')
 
@@ -404,7 +416,7 @@ function getUnconfirmed(address, callback){
                     callback(txs_parsed)
                 })
 
-            }).error(function() { callback(0) })
+            }).fail(function() { callback(0) })
         
         }, 1000)
 }

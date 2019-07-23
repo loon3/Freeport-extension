@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/bootstrap-dialog.min.css">
     <link rel="stylesheet" href="../css/bootstrap4-toggle.min.css">
 
-    <script src="../js/lib/jquery-2.2.4.min.js"></script> 
+    <script src="../js/lib/jquery-3.4.1.min.js"></script> 
     <script src="../js/lib/popper.min.js"></script>
     <script src="../js/lib/bootstrap.min.js"></script>
     <script src="../js/lib/bootstrap-dialog.min.js"></script>
@@ -35,7 +35,7 @@
     <script src="../js/common.js"></script>
     <script src="../js/imgur.js"></script>
 -->
-<!--    <script src="../js/lib/ipfs.js"></script>-->
+<!--    <script src="../js/lib/ipfs.js"></script> removed library -->
     <script src="../js/lib/buffer.js"></script>
     
     <script src="../js/lib/idle.js"></script>
@@ -59,6 +59,9 @@
 -->
     
     <style>
+        .hide {
+            display: none;
+        }
         body {
               background: url(../images/bear-alphamask-bg.png) no-repeat center center fixed; 
               -webkit-background-size: cover;
@@ -253,7 +256,7 @@
         <div class="col-10">
             
          <!--Welcome Splash-->   
-            <div id="buttonsplash" class="jumbotron mt-3 jumbotron-tab-container" style="display: none; padding-bottom: 50px;">
+            <div id="buttonsplash" class="jumbotron mt-3 jumbotron-tab-container hide" style="padding-bottom: 50px;">
                 <h1>Welcome to Freeport</h1>
                 <p class="lead">Collect, create and trade cryptogood assets issued on Counterparty.
                 <div class="row" style="padding: 25px 0 0 0;">

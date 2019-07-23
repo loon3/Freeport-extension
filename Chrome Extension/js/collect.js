@@ -2,8 +2,8 @@ function pageCollectBrowse(){
     
     $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
     
-    $("#page-container-collect").hide()
-    $("#page-container-collect-content").show()
+    $("#page-container-collect").addClass("hide")
+    $("#page-container-collect-content").removeClass("hide")
     
     var source_html = "https://alphamask.io/api/list/collections"
     var collection = ""
@@ -30,14 +30,14 @@ function pageCollectInventory(address){
     
     $("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
     
-    $("#page-container-collect").hide()
-    $("#page-container-collect-content").show()
+    $("#page-container-collect").addClass("hide")
+    $("#page-container-collect-content").removeClass("hide")
     
     var source_html = "https://digirare.com/api/wallet/"+address
     
     $.getJSON( source_html, function( data ) {
         pageCollectInventoryXchain(address, data)
-    }).error(function(){
+    }).fail(function(){
         var emptyData = {data: []}
         pageCollectInventoryXchain(address, emptyData)
     })
@@ -165,7 +165,7 @@ function pageCollectInventoryXchain(address, data){
 
                 collectionEntry = ""
                 collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
-                collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='display: inline-block; width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
+                collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
                 collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 0 8px 0 8px;'>"+display_name+"</div>"
                 collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
@@ -208,10 +208,10 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     $("#page-container-collect-assetview").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
 
     //$("#page-container-collect-content").show()
-    $("#page-container-collect").hide()
+    $("#page-container-collect").addClass("hide")
     
-    $("#page-container-collect-content").hide()
-    $("#page-container-collect-assetview").show()
+    $("#page-container-collect-content").addClass("hide")
+    $("#page-container-collect-assetview").removeClass("hide")
     
     console.log(ypos)
     
@@ -395,9 +395,9 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
                                 var assetImageHtml = "<img src='"+assetImage+"'>"
                                 $(this).find("#dialogSendAsset-icon-lg").html(assetImageHtml)
                                 
-                                $(this).find("#dialogSendAsset-memo-hex-group").hide()
-                                $(this).find("#addbtc-form-group").hide()
-                                $(this).find("#dialogSendAsset-memo-group").hide()
+                                $(this).find("#dialogSendAsset-memo-hex-group").addClass("hide")
+                                $(this).find("#addbtc-form-group").addClass("hide")
+                                $(this).find("#dialogSendAsset-memo-group").addClass("hide")
                             }
 
                             $(this).find(".dialog-transfee").html(fee_custom)
