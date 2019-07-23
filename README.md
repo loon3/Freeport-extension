@@ -1,7 +1,9 @@
 # Freeport
-Cryptogoods Chrome Extension Wallet (Counterparty/BTC)
+Cryptogoods Browser Extension (Counterparty/BTC)
 
-Currently under development.
+Compatible with Chrome and Firefox
+
+***Under active development***
 
 ## Install from Web Store
 
