@@ -2,16 +2,16 @@
    "author": "Joe Looney",
    "description": "Collect, Trade and Create Cryptogoods",
    "icons": {
-      "128": "images/icon-128.png",
-      "16": "images/icon-16.png",
-      "48": "images/icon-48.png"
+      "128": "images/icon-128-2.png",
+      "16": "images/icon-16-2.png",
+      "48": "images/icon-48-2.png"
    },
    "background": {
       "scripts": ["js/background.js"],
       "persistent": false
    },
    "browser_action": {
-      "default_icon": "images/icon-48.png"
+      "default_icon": "images/icon-48-2.png"
    },
    "web_accessible_resources": [
        "js/*.*",
@@ -27,5 +27,5 @@
    "manifest_version": 2,
    "name": "Freeport",
    "short_name": "freeport",
-   "version": "0.3.0"
+   "version": "0.4.0"
 }

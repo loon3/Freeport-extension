@@ -87,9 +87,12 @@ function pageCollectInventoryXchain(address, data){
 
     getXchainBalances(address, function(data_xchain) {
 
-            collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
+            //collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
+        
             
-            collection += "<div align='right' style='margin: -50px 0 0 0;'><input id='imageToggle' type='checkbox' data-toggle='toggle' data-on='Images On' data-off='Images Off' data-size='mini' checked></div>"
+            collection += "<h2>My Collection</h2>"
+            
+            collection += "<div align='right' style='margin: 0 0 0 0;'><input id='imageToggle' type='checkbox' data-toggle='toggle' data-on='Images On' data-off='Images Off' data-size='mini' data-width='100' data-height='20' data-onstyle='primary' data-offstyle='danger' checked></div>"
             
 
             collection += "<div class='row' style='margin: 12px 0 0 0;'>"
@@ -108,13 +111,15 @@ function pageCollectInventoryXchain(address, data){
             
             var digirareAsset
             var digirareImageArray = []
-  
+            var digirareCollectionArray = []
+            
             if(data['data']){
                 var assetArrayLength = data['data'].length
                 for(var i=0; i < assetArrayLength; i++){
                     digirareAsset = data['data'][i]['asset']['name']
                     if(data['data'][i]['card']){ 
                         digirareImageArray[digirareAsset] = data['data'][i]['card']['image']
+                        digirareCollectionArray[digirareAsset] = data['data'][i]['card']['collection']
                     }    
                 }
             }
@@ -130,10 +135,12 @@ function pageCollectInventoryXchain(address, data){
 
                 cardName = data_xchain['data'][i]['asset']
                 cardDescription = data_xchain['data'][i]['description']
+                
                 cardQty = data_xchain['data'][i]['quantity']
                 cardQty = Number(cardQty).toFixed(8).replace(/\.?0+$/,"")
                 cardAlias = ""
                 cardFreeport = false
+                cardCollection = "none"
                 
                 if(digirareImageArray[cardName]){
                     cardImage = digirareImageArray[cardName]
@@ -149,6 +156,10 @@ function pageCollectInventoryXchain(address, data){
                         }
                     }
                 } 
+                
+                if(digirareCollectionArray[cardName]){
+                    cardCollection = digirareCollectionArray[cardName]
+                }
 
                 if(cardFreeport){
                     display_name = cardAlias
@@ -164,10 +175,10 @@ function pageCollectInventoryXchain(address, data){
                 }
 
                 collectionEntry = ""
-                collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"'>"
+                collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"' data-collection='"+cardCollection+"'>"
                 collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
                 collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 0 8px 0 8px;'>"+display_name+"</div>"
-                collectionEntry += "<div class='inventory-asset-qty' style='font-size: 11pt; color: #FFEB70;'>x"+cardQty+"</div>"
+                collectionEntry += "<div class='inventory-asset-qty' style='font-size: 9pt; color: #fff; background-color: #000; margin: 5px 0 0 0; padding: 0 5px 0 5px; display: inline-block;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
 
                 //b3ffcc
@@ -184,9 +195,9 @@ function pageCollectInventoryXchain(address, data){
                 collection += "<div class='col lead' align='center' style='margin: 25px 0 35px 0; padding: 20px; width: 100%; text-align: center;'>There's nothing in this collection!</div>"
             }
 
-            collection += "<div class='col-12 collection-item-asset-end' style='padding: 20px 0 16px 0'>"
-            collection += "<div id='page-collect-search-select' style='font-size: 14pt; font-weight: bold; width: 100%; text-align: center'><i class='fa fa-search'></i> Search assets at digirare.com</div>"
-            collection += "</div></div>"
+            //collection += "<div class='col-12 collection-item-asset-end' style='padding: 20px 0 16px 0'>"
+            //collection += "<div id='page-collect-search-select' style='font-size: 14pt; font-weight: bold; width: 100%; text-align: center'><i class='fa fa-search'></i> Search assets at digirare.com</div>"
+            //collection += "</div></div>"
 
             collection += "</div>"
 
@@ -202,7 +213,7 @@ function pageCollectInventoryXchain(address, data){
 }
 
 
-function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias, ypos){
+function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, assetdescription, assetalias, assetcollection, ypos){
     
     //$("#page-container-collect-content").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
     $("#page-container-collect-assetview").html("<div align='center'><i class='fa fa-spinner fa-spin fa-3x fa-fw'></i></div>")
@@ -215,7 +226,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     console.log(ypos)
     
-    var backButton = "<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' type='button' class='btn btn-back' data-ypos='"+ypos+"'><i class='fa fa-arrow-left fa-2x'></i></button></div>"
+    var backButton = "<div align='left' style='position: fixed; top: 50%; left: 0px; vertical-align: middle; transform: translateY(-50%);'><button id='page-inventory-back-button' class='btn-back' data-ypos='"+ypos+"'><i class='fa fa-arrow-left fa-2x'></i></button></div>"
     
     $("#leftbar-container").html(backButton)
       
@@ -224,9 +235,9 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     assetquantity = Number(assetquantity).toFixed(8).replace(/\.?0+$/,"")
     
-    assetInfo += "<div align= 'center' style='position: relative; top: -30px; background-color: #38444f;'>Asset Information</div>"
-    assetInfo += "<div style='padding: 0 15px 0 15px;'>"
-    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Sell (Soon!)</button></div></div>"
+    //assetInfo += "<div align= 'center' style='position: relative; top: -30px; background-color: #38444f;'>Asset Information</div>"
+    assetInfo += "<div style='padding: 0 15px 0 15px; top: -30px; position: relative;'>"
+    assetInfo += "<div class='row' style='width: 100%; padding: 0 0 28px 0; text-align: center; margin: auto;'><div class='col'><button type='button' class='btn btn-primary btn-block asset-send-button' data-image='"+assetimage+"' data-asset='"+assetname+"' data-qty='"+assetquantity+"' data-divisible='"+assetdivisible+"' data-alias='"+assetalias+"'>Send</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Sell (Soon!)</button></div></div>"
     
     //<div class='col'><button type='button' class='btn btn-info btn-block' disabled>Trade (Soon!)</button></div><div class='col'><button type='button' class='btn btn-success btn-block' disabled>Gift (Soon!)</button></div><div class='col'><button type='button' class='btn btn-warning btn-block' disabled>Bonus (Soon!)</button></div>
     
@@ -253,8 +264,8 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                     
                     if(!registry.error){
                         twitterAlias += "<div id='container-collect-issuer-twitter' data-twitter='"+registry.twitter.username+"' style='padding: 8px 0 0 0; cursor: pointer;'>"
-                        twitterAlias += "<div style='display: inline-block;'><img src='http://avatars.io/twitter/"+registry.twitter.username+"/small' class='rounded-circle'></div>"
-                        twitterAlias += "<div style='display: inline-block; margin-left: 8px; font-size: 24px; font-weight: 600;'>@"+registry.twitter.username+"</div>"
+                        //twitterAlias += "<div style='display: inline-block;'><img src='http://avatars.io/twitter/"+registry.twitter.username+"/small' class='rounded-circle'></div>"
+                        twitterAlias += "<div style='display: inline-block; margin-left: 0; font-size: 24px; font-weight: 600;'>@"+registry.twitter.username+"</div>"
                         twitterAlias += "<div style='display: inline-block; margin-left: 8px; color: #1a97f0;'><i class='fa fa-twitter'></i></div>"
                         twitterAlias += "</div>"
                         twitterAlias += "<div style='font-size: 12px; font-weight: bold; word-break: break-all; padding: 8px 0 8px 0;'>"+data.issuer+"</div>"
@@ -262,10 +273,17 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                         twitterAlias += "<div style='font-weight: bold; word-break: break-all;'>"+data.issuer+"</div>"
                     }
 
-                    assetInfo += "<div class='row' style='background-color: #38444F;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display
-                    assetInfo += "<div><div class='mr-3' style='display: inline-block;'><button type='button' class='btn btn-info btn-xs asset-tweet-share-button' data-asset='"+assetname+"' data-alias='"+assetalias+"' data-image='"+assetimage+"'><i class='fa fa-twitter' aria-hidden='true'></i> Share on Twitter</button></div><div class='' style='display: inline-block;'><button type='button' class='btn btn-default btn-xs asset-tweet-who-button' data-asset='"+assetname+"'><i class='fa fa-twitter' aria-hidden='true'></i> See who's tweeting about this</button></div></div>"
-                    assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='font-weight: bold; color: #FFEB70; padding: 10px 0 10px 0; font-size: 32px;'><span style='font-size: 18px;'>x </span>"+assetquantity+"</div></div></div>"
-                    assetInfo += "<div class='row' style='background-color: #D3BDB0;'>"
+                    assetInfo += "<div class='row' style='background-color: #000; color: #fff; border-radius: 10px 10px 0 0;'><div id='container-collect-asset-name' class='col-lg-6' style='padding: 10px 10px 10px 20px; font-size: 32px; font-weight: bold;'>"+assetname_display
+                    //assetInfo += "<div><div class='mr-3' style='display: inline-block;'><button type='button' class='btn btn-info btn-xs asset-tweet-share-button' data-asset='"+assetname+"' data-alias='"+assetalias+"' data-image='"+assetimage+"'><i class='fa fa-twitter' aria-hidden='true'></i> Share on Twitter</button></div><div class='' style='display: inline-block;'><button type='button' class='btn btn-default btn-xs asset-tweet-who-button' data-asset='"+assetname+"'><i class='fa fa-twitter' aria-hidden='true'></i> See who's tweeting about this</button></div></div>"
+                    
+                    if(Math.ceil(parseFloat(assetquantity)) > 1){
+                        var assetInfo_edition = "Editions"
+                    } else {
+                        var assetInfo_edition = "Edition"
+                    }
+                    
+                    assetInfo += "</div><div id='container-collect-asset-qty' class='col-lg-6'><div style='display: inline-block; font-weight: bold; color: #fff; padding: 10px 0 10px 0; font-size: 32px;'>"+assetquantity+" <span style='font-size: 13px; font-weight: 200;'>"+assetInfo_edition+"</span></div></div></div>"
+                    assetInfo += "<div class='row' style='background-color: #fff; border: 1px solid #000; color: #000;'>"
                     assetInfo += "<div class='col-lg-6' align='center' style='padding: 20px;'>"
                     assetInfo += "<img src='"+assetimage+"' style='max-width: 100%;'></div>"
                     assetInfo += "<div class='col-lg-6' style='font-weight: bold; padding: 20px; color: #38444f;'>"
@@ -275,9 +293,44 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                     assetInfo += twitterAlias 
 
                     assetInfo += "</div>"
-                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
-                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
-                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
+                    //assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
+                    //assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Divisible:<br><span style='font-weight: bold;'>"+data.divisible+"</span></div>"
+                    //assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Locked:<br><span style='font-weight: bold;'>"+data.locked+"</span></div>"
+                    
+                    
+                    if(data.locked == true){
+                        var assetInfo_lock = "<i class='fa fa-lock' aria-hidden='true'></i>"
+                    } else {
+                        var assetInfo_lock = "<i class='fa fa-unlock' aria-hidden='true'></i>"
+                    }                 
+                    
+                    if(parseInt(data.supply) > 1){
+                        assetInfo += "<div style='font-size: 18px;font-weight: 600;padding: 10px;margin: 40px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 2px solid #000;'>Limited Edition of "+numberWithCommas(parseInt(data.supply))+" <span style='font-size: 14px'>"+assetInfo_lock+"</span></div>"
+                    } else {
+                        assetInfo += "<div style='font-size: 18px;font-weight: 600;padding: 10px;margin: 20px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 2px solid #000;'>Single Edition <span style='font-size: 14px'>"+assetInfo_lock+"</span></div>"
+                    }
+                    
+                           
+                    
+    
+    
+                   
+                    if(data.divisible == true){
+                        assetInfo += "<div style='font-size: 14px;font-weight: 300;padding: 5px;margin: 6px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 1px solid #000;'>Editions divisible to 0.00000001 <span style='font-size: 12px'><i class='fa fa-pie-chart' aria-hidden='true'></i></span></div>"
+                    } 
+                    
+                    
+                    if(assetcollection != "none"){
+                        assetInfo += "<div style='font-size: 14px;font-weight: 300;padding: 5px;margin: 6px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 1px solid #000;'>"+assetcollection+" Collection</div>"
+                    }
+                    
+//                    if(data.locked == true){
+//                        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding: 10px; margin: 10px 0 0 0; background-color: #ccc; color: #222;'><div style='display: inline-block; width: 40px; text-align: center;'><i class='fa fa-lock' aria-hidden='true'></i></div> Issuance Locked</div>"
+//                    } else {
+//                        assetInfo += "<div style='font-size: 18px; font-weight: 300; padding: 10px; margin: 10px 0 0 0; background-color: #eee; color: #666;'><div style='display: inline-block; width: 40px; text-align: center;'><i class='fa fa-unlock' aria-hidden='true'></i></div> Issuance Unlocked</div>"
+//                    }
+                    
+                    
 
                     if(anchors[assetname]){
     //                    assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Image Anchor Hash:<br><span style='font-weight: bold;word-break: break-all;'>"+anchors[assetname]+"</span></div>"
@@ -286,9 +339,11 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                         console.log(anchors[assetname])
 
                         if(base64ToHex(imageHashFromUrl) == anchors[assetname]){
-                            assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: green;'><i class='fa fa-anchor' aria-hidden='true'></i> Image Anchor Secured</div>"
+                            assetInfo += "<div style='font-size: 14px;font-weight: 300;padding: 5px;margin: 6px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 1px solid #000;'>Image Anchor Secured <span style='font-size: 12px'><i class='fa fa-anchor' aria-hidden='true'></i></span></div>"
                         } else {
-                            assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px; color: red;'>Image Doesn't Match Anchor!</div>"
+                            assetInfo += "<div style='font-size: 14px;font-weight: 300;padding: 5px;margin: 6px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 1px solid #000;'>Image Doesn't Match Anchor <span style='font-size: 12px'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></span></div>"
+                            
+            
                         }
                     }
 
@@ -541,7 +596,7 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
         },
         {
             label: 'Close',
-            cssClass: 'btn-default',
+            cssClass: 'btn-secondary',
             action: function(dialogItself) {
 
                 if($("body").data("sendTx") == true){

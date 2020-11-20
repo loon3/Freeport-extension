@@ -51,3 +51,5 @@ v0.2.8 - Fix lock divisible asset bug
 v0.2.9 - Add priority and economy fee estimates
 
 v0.3.0 - Firefox compatibility
+
+v0.4.0 - UI overhaul

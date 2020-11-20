@@ -468,9 +468,9 @@ function updateUnconfirmed(data){
     //load unconfirmed
     $("#unconfirmed-tx-dropdown-count").html(data.count)
     if(data.count > 0){
-        $("#unconfirmed-tx-dropdown-button").removeClass("btn-secondary").addClass("btn-danger")
+        $("#unconfirmed-tx-dropdown-button").removeClass("btn-dark").addClass("btn-danger")
     } else {
-        $("#unconfirmed-tx-dropdown-button").removeClass("btn-danger").addClass("btn-secondary") 
+        $("#unconfirmed-tx-dropdown-button").removeClass("btn-danger").addClass("btn-dark") 
     }
     
     var txDisplay = "<div style='margin: -8px 0 -8px 0;'>"
@@ -567,7 +567,7 @@ function updateUnconfirmed(data){
     txDisplay += "</div>"
     
     if(data.count == 0){
-        txDisplay = '<button class="dropdown-item unconfirmed-tx-dropdown-item" type="button" style="text-align: center; color: #fff" disabled>No unconfirmed transactions</button>'
+        txDisplay = '<button class="dropdown-item unconfirmed-tx-dropdown-item" type="button" style="text-align: center;" disabled>No unconfirmed transactions</button>'
     }
 
     $("#unconfirmed-tx-dropdown").html(txDisplay)

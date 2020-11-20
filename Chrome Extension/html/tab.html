@@ -5,9 +5,12 @@
 
     <title>Freeport</title>
     
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">    
+    
 <!--    css/font-awesome.min.css">-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../css/bootstrap-superhero.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-lux.css">
     <link rel="stylesheet" href="../css/bootstrap-dialog.min.css">
     <link rel="stylesheet" href="../css/bootstrap4-toggle.min.css">
 
@@ -62,12 +65,22 @@
         .hide {
             display: none;
         }
+        
+        .freeport-font {
+            font-family: 'Permanent Marker', cursive;
+        }
+/*
         body {
-              background: url(../images/bear-alphamask-bg.png) no-repeat center center fixed; 
+              background: url(../images/claudio-schwarz-purzlbaum-fAmj2spOqxc-unsplash.jpg) no-repeat center center fixed; 
               -webkit-background-size: cover;
               -moz-background-size: cover;
               -o-background-size: cover;
               background-size: cover;
+        }
+*/
+        body {
+            background-color: #fff;
+            color: #000;
         }
         #header-address {
             font-weight: 900;
@@ -76,15 +89,19 @@
         }
         #header-container {
             margin: 0 0 0 0;
-            background-color: #38444f;
+            background-color: #fff;
+            color: #000;
             padding: 10px;
         }
         .page-menu {
-            margin: 10px 0 0 0;
+/*            margin: 10px 0 0 0;*/
             cursor: pointer;
+            border-color: #000;
+            color: #000;
         }
         .passphrase-box {
             background-color: #000;
+            color: #fff;
             padding: 10px;
             font-size: 14pt;
             font-family: monospace;
@@ -92,19 +109,41 @@
         #body {
             display: none;
         }
+        .btn-secondary  {
+            background-color: #eee !important; 
+        }
         .modal-footer {
             text-align: center;
+            margin: auto;
+        }
+        .modal-header  {
+            -webkit-border-radius: 0px !important;
+            -moz-border-radius: 0px !important;
+            border-radius: 0px !important; 
+            background-color: #000 !important;
+        }
+        button.close:hover, 
+        button.close:focus, 
+        button.close:active,
+        button.close {
+            color: #fff;
         }
         .navbar-brand {
             font-weight: 600;
         }
-        .jumbotron-tab-container, .jumbotron-tab-container-content {
-            margin-bottom: 90px;
-            
-/*            background-color: #113360;*/
-        }
-       
         
+        .jumbotron-tab-container {
+/*            border: 4px solid #000;*/
+            background-color: #fff;
+            color: #000;
+            margin: 30px 0 120px 0;
+            padding: 30px 0 0 0;
+        }
+        
+        .jumbotron-tab-container-content {
+            padding: 0 0 120px 0;
+        }
+
         .collection-item {
             cursor: pointer;
         }
@@ -134,8 +173,9 @@
         }
         .btn-back { 
           color: #ffffff; 
-          background-color: #4E5D6C; 
-          border-color: #4E5D6C; 
+          background-color: #000; 
+          border-color: #000;
+          padding: 10px;
         } 
 
         .btn-back:hover, 
@@ -144,8 +184,8 @@
         .btn-back.active, 
         .open .dropdown-toggle.btn-back { 
           color: #ffffff; 
-          background-color: #38444f; 
-          border-color: #38444f; 
+          background-color: #000; 
+          border-color: #000; 
         } 
 
 
@@ -162,9 +202,6 @@
             cursor: pointer;
         }
         
-        .bg-darker{
-            background-color: #38444f;
-        }
         
         .vert-middle{
             position: fixed; top: 50%; text-align: center; vertical-align: middle; transform: translateY(-50%);
@@ -192,23 +229,31 @@
 
         }
 
-        #container-collect-button, #container-create-button, #container-trade-button {
-            background-color: #38444f; 
+        #container-collect-button, #container-create-button, #container-sell-button {
+            background-color: #000; 
+            border: 1px solid #000;
+            color: #fff;
         }
       
-        #container-collect-button:hover, #container-create-button:hover, #container-trade-button:hover {
+/*
+        #container-collect-button:hover, #container-create-button:hover, #container-sell-button:hover {
             background-color: rgba(0, 0, 0, 0.1);
+        }
+*/
+        .btn-dark {
+             background-color: #000;
         }
         
         #unconfirmed-tx-dropdown {
-            background-color: #64788C;
+            background-color: #fff;
+            border: 1px solid #000;
         }
         .unconfirmed-tx-dropdown-item {
             padding: 0 -24px 0 24px;
-/*            color: #000;*/
+            color: #000;
         }
         .unconfirmed-tx-dropdown-item:hover {
-            background-color: #38444f;
+/*            background-color: #38444f;*/
             cursor: pointer;
         }
         #signMessageButton {
@@ -226,11 +271,11 @@
 <div id="body">
     <div style="position: absolute; top: 16px; right: 80px;">
         <div class="dropdown" style="z-index: 10;">
-          <button class="btn btn-secondary btn-sm" type="button" id="unconfirmed-tx-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 50%; width: 36px; height: 36px;">
-            <div style="margin: 0 0 0 0; font-weight: bold; font-family: helvetica;" id="unconfirmed-tx-dropdown-count">0</div>
+          <button class="btn btn-dark btn-sm" type="button" id="unconfirmed-tx-dropdown-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 50%; width: 36px; height: 36px;">
+            <div style="margin: 0 0 0 -1.5px; font-size: 13px;" id="unconfirmed-tx-dropdown-count">0</div>
           </button>
           <div id="unconfirmed-tx-dropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="width: 400px;">     
-            <button class="dropdown-item unconfirmed-tx-dropdown-item" type="button" style="text-align: center; color: #fff" disabled>No unconfirmed transactions</button>
+            <button class="dropdown-item unconfirmed-tx-dropdown-item" type="button" style="text-align: center; color: #fff;" disabled>No unconfirmed transactions</button>
           </div>
         </div>
     </div>
@@ -256,34 +301,40 @@
         <div class="col-10">
             
          <!--Welcome Splash-->   
-            <div id="buttonsplash" class="jumbotron mt-3 jumbotron-tab-container hide" style="padding-bottom: 50px;">
-                <h1>Welcome to Freeport</h1>
-                <p class="lead">Collect, create and trade cryptogood assets issued on Counterparty.
-                <div class="row" style="padding: 25px 0 0 0;">
+            <div id="buttonsplash" class="mt-3 jumbotron-tab-container hide" style="padding: 20px; text-align: center;">
+                <div style="font-size: 72px; font-weight:600; margin: 70px 0 0 0;" class="freeport-font">Freeport</div>
+                <p class="lead">Collect, create and sell cryptogood assets issued on Bitcoin.
+                <div class="row" style="padding: 25px;">
                     <div class="col-4">
-                        <div id="container-collect-button" align="center" style="padding: 20px 0 20px 0; cursor: pointer;">
+                        <div id="container-collect-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
                             <div class="h3" style="color: #fff;">COLLECT</div>
+<!--
                             <div style="padding: 20px 10px 0 10px; max-width: 200px">
                                 <img src="../../images/PEPECOLLECT.jpg" style="border-radius: 10px; max-width: 100%; height: auto;">
                             </div>
+-->
 
                         </div>
                     </div>
                     <div class="col-4">
-                        <div id="container-create-button" align="center" style="padding: 20px 0 20px 0; cursor: pointer;">
+                        <div id="container-create-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
                             <div class="h3" style="color: #fff;">CREATE</div>
+<!--
                             <div style="padding: 20px 10px 0 10px; max-width: 200px">
                                 <img src="../../images/PEPEBIRTH.gif" style="border-radius: 10px; max-width: 100%; height: auto;">
                             </div>
+-->
 
                         </div>
                     </div>
                     <div class="col-4">
-                        <div id="container-trade-button" align="center" style="padding: 20px 0 20px 0; cursor: pointer;">
-                            <div class="h3" style="color: #fff;">TRADE</div>
+                        <div id="container-sell-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
+                            <div class="h3" style="color: #fff;">SELL</div>
+<!--
                             <div style="padding: 20px 10px 0 10px; max-width: 200px">
                                 <img src="../../images/PEPEOLDTRADE.png" style="border-radius: 10px; max-width: 100%; height: auto;">
                             </div>
+-->
 
                         </div>
                     </div>
@@ -298,65 +349,64 @@
         <p class="lead">
             Explore the world of cryptogoods.
             <ul class="list-group">
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-collect-inventory-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-cube"></i></div> My Collection</li>
-                <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-collect-search-select-old"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-search"></i></div> Search</li>
-<!--                <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-collect-browse-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-book"></i></div> Browse</li>-->
+              <li class="list-group-item list-group-item-action page-menu" id="page-collect-inventory-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-cube"></i></div> My Collection</li>
+                <li class="list-group-item list-group-item-action page-menu" id="page-collect-search-select-old"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-search"></i></div> Search</li>
+<!--                <li class="list-group-item list-group-item-action page-menu" id="page-collect-browse-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-book"></i></div> Browse</li>-->
             </ul>
           </p>
       </div>
-      <div class="jumbotron mt-3 jumbotron-tab-container-content" id="page-container-collect-content">
+      <div class=" mt-3 jumbotron-tab-container-content" id="page-container-collect-content">
       </div>
-      <div class="jumbotron mt-3 jumbotron-tab-container" id="page-container-collect-assetview">
+      <div class=" mt-3 jumbotron-tab-container" id="page-container-collect-assetview">
       </div>
       
-<!--Trade-->
-      <div class="jumbotron mt-3 jumbotron-tab-container" id="page-container-trade">
-        <h1>Trade</h1>
+<!--Sell-->
+      <div class=" mt-3 jumbotron-tab-container" id="page-container-sell">
+        <h1>Sell</h1>
         <p class="lead">
-            Buy, sell and trade cryptogoods.
 <!--
             <ul class="list-group">
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Trade My Cryptogoods</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">My Trade History</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Browse Market Offers</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu">Recent Market Trades</li>
+              <li class="list-group-item list-group-item-action page-menu">Trade My Cryptogoods</li>
+              <li class="list-group-item list-group-item-action page-menu">My Trade History</li>
+              <li class="list-group-item list-group-item-action page-menu">Browse Market Offers</li>
+              <li class="list-group-item list-group-item-action page-menu">Recent Market Trades</li>
             </ul>
 -->
-            <div class="h3" style="padding: 50px; background-color: #38444f;" align="center">Coming soon!</div>
+            <div class="h3" style="padding: 50px; background-color: #fff;" align="center">Coming soon!</div>
         </p>
       </div>
 
 <!--Create-->      
-      <div class="jumbotron mt-3 jumbotron-tab-container" id="page-container-create">
+      <div class="mt-3 jumbotron-tab-container" id="page-container-create">
         <h1>Create</h1>
         <p class="lead">
-            Issue your own cryptogood asset.
+            Issue your own digital item.
             <ul class="list-group">
-                <li id='page-container-create-new-button' class="list-group-item list-group-item-action h5 list-group-item-dark page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-picture-o"></i></div> Create New Asset</li>
-                <li id='page-container-create-manage-button' class="list-group-item list-group-item-action h5 list-group-item-dark page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-suitcase"></i></div> Manage My Assets</li>
-<!--                <li id='page-container-create-twitter-button' class="list-group-item list-group-item-action h5 list-group-item-dark page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-twitter-square"></i></div> Connect Twitter</li>-->
+                <li id='page-container-create-new-button' class="list-group-item list-group-item-action page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-picture-o"></i></div> Create New Item</li>
+                <li id='page-container-create-manage-button' class="list-group-item list-group-item-action page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-suitcase"></i></div> Manage My Items</li>
+<!--                <li id='page-container-create-twitter-button' class="list-group-item list-group-item-action page-menu"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-twitter-square"></i></div> Connect Twitter</li>-->
             </ul>
 <!--            <div class="h3" style="padding: 50px; background-color: #38444f;" align="center">Coming soon!</div>-->
         </p>
       </div>
-      <div class="jumbotron mt-3 jumbotron-tab-container-content" id="page-container-create-content">
+      <div class="mt-3 jumbotron-tab-container-content" id="page-container-create-content">
       </div>
       
 <!--Settings-->
-      <div class="jumbotron mt-3 jumbotron-tab-container" id="page-container-settings">
+      <div class="mt-3 jumbotron-tab-container" id="page-container-settings">
         <h1>Settings</h1>
         <p class="lead">
             View and adjust Freeport settings.
             <ul class="list-group">
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-settings-address-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-user"></i></div> Select Collection Address</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-settings-passphrase-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-user-secret"></i></div> View Passphrase</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-settings-fee"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-cab"></i></div> Set Transaction Fee</li>
-              <li class="list-group-item list-group-item-action h5 list-group-item-dark page-menu" id="page-settings-reset-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-power-off"></i></div> Reset</li>
+              <li class="list-group-item list-group-item-action page-menu" id="page-settings-address-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-user"></i></div> Select Collection Address</li>
+              <li class="list-group-item list-group-item-action page-menu" id="page-settings-passphrase-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-user-secret"></i></div> View Passphrase</li>
+              <li class="list-group-item list-group-item-action page-menu" id="page-settings-fee"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-cab"></i></div> Set Transaction Fee</li>
+              <li class="list-group-item list-group-item-action page-menu" id="page-settings-reset-select"><div style='display: inline-block; padding-right: 6px;'><i class="fa fa-power-off"></i></div> Reset</li>
             </ul>
           
         </p>
       </div>
-      <div class="jumbotron mt-3 jumbotron-tab-container" id="page-container-error">
+      <div class="mt-3 jumbotron-tab-container" id="page-container-error">
         <h1>Error</h1>
         <p class="lead">Not a valid option.</p>
       </div>
@@ -366,7 +416,7 @@
     </div>
     
 <!--Bottom Navbar-->
-    <nav class="navbar fixed-bottom navbar-dark bg-dark bg-darker">
+    <nav class="navbar fixed-bottom navbar-dark bg-dark">
       <div id="navbarPopup" class="navbar-expand">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -376,14 +426,14 @@
             <a class="nav-link" href="#" id="nav-create" data-tab="create">Create</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="nav-trade" data-tab="trade">Trade</a>
+            <a class="nav-link" href="#" id="nav-sell" data-tab="sell">Sell</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" id="nav-settings" data-tab="settings">Settings</a>
           </li>
         </ul>
       </div>
-      <a class="navbar-brand" href="#"><div style="display: inline-block; margin-right: 10px;"><img src="../images/icon-48.png" height="36px"></div> Freeport <span id='app-version'></span></a>
+      <a class="navbar-brand freeport-font" href="#">Freeport <span id='app-version'></span></a>
     </nav>
 </div>
 </body>

@@ -235,9 +235,9 @@ function initInventory(passphrase, address){
     
     checkRegistry(address, function(registry){
         if(!registry.error){
-            $("#header-address").append("<div id='header-address-twitter-link' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
+            $("#header-address").append("<div id='header-address-twitter-link' data-twitter='"+registry.twitter.username+"' style='display: inline-block; font-weight: normal; background-color: #fff; margin-left: 8px; padding: 0 4px 0 5px; border: 1px solid #000;'>@"+registry.twitter.username+" <i class='fa fa-twitter'></i></div>")
         } else {
-            $("#header-address").append("<div id='header-address-twitter-link' style='display: inline-block; font-weight: normal; background-color: #1a97f0; margin-left: 8px; padding: 0 5px 0 5px; border-radius: 5px;'><i class='fa fa-twitter'></i></div>")
+            $("#header-address").append("<div id='header-address-twitter-link' style='display: inline-block; font-weight: normal; background-color: #fff; margin-left: 8px; padding: 0 4px 0 5px; border: 1px solid #000;'><i class='fa fa-twitter'></i></div>")
         }
     })
 
@@ -253,12 +253,15 @@ function initInventory(passphrase, address){
 	
         getFeeUpdate2(function(fee, feeRecommendedPriority, feeRecommendedEconomy){
             getAddressBalance(address, function(data){
+                
+                if(!data.balance){data.balance = 0};
+                
                 var balance = parseInt(data.balance) / 100000000
 
                 $("#body").data("balance_btc", data.balance)
                 $("#body").data("fee_btc", fee)
                 $("#body").data("fee_btc_recommended_priority", feeRecommendedPriority)
-			$("#body").data("fee_btc_recommended_economy", feeRecommendedEconomy)
+			    $("#body").data("fee_btc_recommended_economy", feeRecommendedEconomy)
 
                 $("#header-balance-btc").html(balance)
 

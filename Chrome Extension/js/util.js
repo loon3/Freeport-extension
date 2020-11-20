@@ -286,7 +286,9 @@ function imageToHash(url, callback){
   })
 }
 
-
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 //function concatToStorage(storage_type, target, data){
 //    
