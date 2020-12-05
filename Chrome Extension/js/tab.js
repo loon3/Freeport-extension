@@ -33,8 +33,8 @@ $( document ).ready(function() {
         gotoTab("create")
     })
     
-    $("#container-sell-button").on('click', function(){
-        gotoTab("sell")
+    $("#container-market-button").on('click', function(){
+        gotoTab("market")
     })
     
     $("#page-collect-browse-select").on('click', function(){

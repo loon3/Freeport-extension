@@ -229,14 +229,14 @@
 
         }
 
-        #container-collect-button, #container-create-button, #container-sell-button {
+        #container-collect-button, #container-create-button, #container-market-button {
             background-color: #000; 
             border: 1px solid #000;
             color: #fff;
         }
       
 /*
-        #container-collect-button:hover, #container-create-button:hover, #container-sell-button:hover {
+        #container-collect-button:hover, #container-create-button:hover, #container-market-button:hover {
             background-color: rgba(0, 0, 0, 0.1);
         }
 */
@@ -302,8 +302,8 @@
             
          <!--Welcome Splash-->   
             <div id="buttonsplash" class="mt-3 jumbotron-tab-container hide" style="padding: 20px; text-align: center;">
-                <div style="font-size: 72px; font-weight:600; margin: 70px 0 0 0;" class="freeport-font">Freeport</div>
-                <p class="lead">Collect, create and sell cryptogood assets issued on Bitcoin.
+                <div style="margin: 50px 0 10px 0;"><img src="../images/freeport-fonttest.png" height="100px"></div>
+                <p class="lead">Collect, create, buy and sell digital items on Bitcoin.
                 <div class="row" style="padding: 25px;">
                     <div class="col-4">
                         <div id="container-collect-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
@@ -328,8 +328,8 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <div id="container-sell-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
-                            <div class="h3" style="color: #fff;">SELL</div>
+                        <div id="container-market-button" align="center" style="padding: 20px 0 15px 0; cursor: pointer; border-radius: 8px;">
+                            <div class="h3" style="color: #fff;">BUY / SELL</div>
 <!--
                             <div style="padding: 20px 10px 0 10px; max-width: 200px">
                                 <img src="../../images/PEPEOLDTRADE.png" style="border-radius: 10px; max-width: 100%; height: auto;">
@@ -360,9 +360,9 @@
       <div class=" mt-3 jumbotron-tab-container" id="page-container-collect-assetview">
       </div>
       
-<!--Sell-->
-      <div class=" mt-3 jumbotron-tab-container" id="page-container-sell">
-        <h1>Sell</h1>
+<!--market-->
+      <div class=" mt-3 jumbotron-tab-container" id="page-container-market">
+        <h1>Marketplace</h1>
         <p class="lead">
 <!--
             <ul class="list-group">
@@ -426,14 +426,14 @@
             <a class="nav-link" href="#" id="nav-create" data-tab="create">Create</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="nav-sell" data-tab="sell">Sell</a>
+            <a class="nav-link" href="#" id="nav-market" data-tab="market">Buy / Sell</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" id="nav-settings" data-tab="settings">Settings</a>
           </li>
         </ul>
       </div>
-      <a class="navbar-brand freeport-font" href="#">Freeport <span id='app-version'></span></a>
+      <a class="navbar-brand" href="#"><img src="../images/icon-48-2-inverse.png" height="36px"> <span id='app-version' class="small"></span></a>
     </nav>
 </div>
 </body>
