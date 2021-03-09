@@ -53,3 +53,5 @@ v0.2.9 - Add priority and economy fee estimates
 v0.3.0 - Firefox compatibility
 
 v0.4.0 - UI overhaul
+
+v0.4.1 - Fix asset names, Digirare API update

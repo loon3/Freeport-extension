@@ -166,8 +166,6 @@ function pageCollectInventoryXchain(address, data){
                 if(digirareCollectionArray[cardName]){
                     cardCollection = digirareCollectionArray[cardName]
                 }
-
-                console.log(cardFreeport)
                 
                 if(cardFreeport){
                     display_name = cardAlias
@@ -328,7 +326,7 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
                     } 
                     
                     
-                    if(assetcollection != "none"){
+                    if(assetcollection != "none" && assetcollection != "Freeport"){
                         assetInfo += "<div style='font-size: 14px;font-weight: 300;padding: 5px;margin: 6px 0 0 0;background-color: #fff;color: #000;text-align: center;border: 1px solid #000;'>"+assetcollection+" Collection</div>"
                     }
                     
