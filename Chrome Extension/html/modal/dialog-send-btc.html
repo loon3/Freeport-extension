@@ -1,0 +1,34 @@
+<div id="dialogSendAsset-container" align="center" style="color: #000;">
+<div id="dialogSendAsset-header" style="padding: 15px 0 30px 0; width: 100%;" align="center">
+    <div id="dialogSendAsset-icon-lg" style="padding: 0 0 10px 0; width: 100%"></div>
+    <div align="center" style="width: 100%;">
+        <div>Balance: </div>
+        <div style="font-weight: bold; font-size: 18pt;"><span id="dialogSendAsset-balance" class="dialogBuyAsset-strong"></span></div>
+    </div>
+</div>
+<div align="left">
+<form id="dialogSendAsset-form">
+  <div class="form-group">
+      <label for="dialogSendAsset-address">Receiver's Address</label>
+      <input id="dialogSendAsset-address" type="text" class="form-control" autocomplete="off">
+  </div>
+  <div class="form-group">
+      <label for="dialogSendAsset-amount">Send Amount</label>
+      <input id="dialogSendAsset-amount" type="text" class="form-control" autocomplete="off">
+  </div>
+  <div class="form-group" id="dialogSendAsset-memo-group">
+      <label for="dialogSendAsset-memo">Memo (optional)</label>
+      <input id="dialogSendAsset-memo" type="text" class="form-control" placeholder="32 character limit" autocomplete="off" maxlength="32">
+  </div> 
+  <div class="form-check" style="margin: -10px 0 8px 0;" id="dialogSendAsset-memo-hex-group">
+    <input type="checkbox" class="form-check-input" id="dialogSendAsset-memo-hex">
+    <label class="form-check-label" for="dialogSendAsset-memo-hex"><span style="font-weight: normal;">Memo data as hex</span></label>
+  </div>
+
+</form>
+</div>
+<div align="center">Current fee: <b><span class="dialog-transfee"></span> BTC</b></div>
+<div align="center" class="dialog-txfeebutton"></div> 
+</div>
+
+    

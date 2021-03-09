@@ -112,6 +112,7 @@ function pageCollectInventoryXchain(address, data){
             var digirareAsset
             var digirareImageArray = []
             var digirareCollectionArray = []
+            var digirareCardArray = []
             
             if(data['data']){
                 var assetArrayLength = data['data'].length
@@ -120,6 +121,7 @@ function pageCollectInventoryXchain(address, data){
                     if(data['data'][i]['card']){ 
                         digirareImageArray[digirareAsset] = data['data'][i]['card']['image']
                         digirareCollectionArray[digirareAsset] = data['data'][i]['card']['collection']
+                        digirareCardArray[digirareAsset] = data['data'][i]['card']['name']
                     }    
                 }
             }
@@ -144,14 +146,18 @@ function pageCollectInventoryXchain(address, data){
                 
                 if(digirareImageArray[cardName]){
                     cardImage = digirareImageArray[cardName]
+                    if(digirareCollectionArray[cardName] == "Freeport"){
+                        cardFreeport = true
+                        cardAlias = digirareCardArray[cardName]
+                    }
                 } else {
                     cardImage = "../images/unknown.png"
                     if(cardDescription.length >= 16){
                         var checkImgur = cardDescription.substring(0, 5);
                         if(checkImgur == "imgur"){
                             cardFreeport = true
-                            var descArray = cardDescription.split(";");
-                            cardImage = "https://i.imgur.com/"+descArray[0].substring(6);
+                            var descArray = cardDescription.split(";")
+                            cardImage = "https://i.imgur.com/"+descArray[0].substring(6)
                             cardAlias = descArray[1]
                         }
                     }
@@ -161,6 +167,8 @@ function pageCollectInventoryXchain(address, data){
                     cardCollection = digirareCollectionArray[cardName]
                 }
 
+                console.log(cardFreeport)
+                
                 if(cardFreeport){
                     display_name = cardAlias
                     cardAlias = encodeURIComponent(cardAlias).replace("'", "%27")
@@ -440,7 +448,10 @@ function sendAssetModal(asset, assetImage, divisible, balance, fee_custom){
         //message: $('<div></div>').load('html/dialog-send-asset.html'),
         message: function(dialog){
 
-                        var $message = $('<div></div>').load('modal/dialog-send-asset.html', function(){
+                        var dialogAsset = 'modal/dialog-send-asset.html'
+                        if(asset == "BTC"){dialogAsset = 'modal/dialog-send-btc.html'}
+            
+                        var $message = $('<div></div>').load(dialogAsset, function(){
                             $(this).find("#dialogSendAsset-balance").html(balance)
                             $(this).find(".dialogSendAsset-asset").html(asset)
                             if(asset != "BTC"){
