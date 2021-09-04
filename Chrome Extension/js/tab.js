@@ -324,7 +324,10 @@ console.log(feetype)
     
     
     //ipfsInit()
-       
+    
+ 
+    
+    
     
 })
 
@@ -792,5 +795,10 @@ function closeAllModals(){
     $('.modal').modal('hide') // closes all active pop ups.
     //$('.modal-backdrop').remove() // removes the grey overlay.
 }
+
+
+
+
+
 
 

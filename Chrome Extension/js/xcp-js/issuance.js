@@ -200,8 +200,6 @@ function create_issuance_data_opreturn(asset, quantity, divisible, description) 
 
 
 
-
-
 function createIssuance_opreturn(add_from, assetid, quantity, divisible, description, transfee, mnemonic, callback) {
         
     var amountremaining = (parseFloat(transfee)*100000000)/100000000;

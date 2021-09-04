@@ -299,6 +299,8 @@ function getutxos(add_from, mnemonic, amountremaining, callback){
     
 }
 
+
+
 function enhancedSendXCP_opreturn_test(add_from, add_to, asset, asset_total, memo, memo_type_hex, transfee, mnemonic, callback){
     
     var amountremaining = (parseFloat(transfee)*100000000)/100000000;
@@ -351,6 +353,7 @@ function enhancedSendXCP_opreturn_test(add_from, add_to, asset, asset_total, mem
     })    
 
 }
+
 
 
 function sendRawSignedTx(rawtx, callback) {

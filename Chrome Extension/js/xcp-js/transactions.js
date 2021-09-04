@@ -251,6 +251,7 @@ function create_xcp_enhanced_send_data_opreturn(address, asset_name, amount, mem
 
 
 
+
 //Destroy Tx type
 
 function create_xcp_destroy_data_opreturn(asset_name, amount, callback) {
