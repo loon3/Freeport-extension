@@ -1,31 +1,26 @@
 {
    "author": "Joe Looney",
-   "description": "Collect, Trade and Create Digital Items",
+   "description": "Create, Collect and Trade Bitcoin NFTs",
    "icons": {
       "128": "images/icon-128-2.png",
       "16": "images/icon-16-2.png",
       "48": "images/icon-48-2.png"
    },
    "background": {
-      "scripts": ["js/background.js"],
-      "persistent": false
+      "service_worker": "js/background.js"
    },
-   "browser_action": {
+   "action": {
       "default_icon": "images/icon-48-2.png"
    },
-   "web_accessible_resources": [
-       "js/*.*",
-       "images/*.*",
-       "css/*.*",
-       "html/*.*"
-   ],
    "permissions": [
-        "storage",
+        "storage"
+   ],
+   "host_permissions": [
         "https://*.digirare.com/",
         "https://*.xchain.io/"
    ],
-   "manifest_version": 2,
+   "manifest_version": 3,
    "name": "Freeport",
    "short_name": "freeport",
-   "version": "0.4.1"
+   "version": "0.5.0"
 }

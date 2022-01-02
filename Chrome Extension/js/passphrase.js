@@ -69,7 +69,7 @@ function checkPassphrase()
                 },
 
                 buttons: [{
-                    label: "Continue",
+                    label: "Create New Wallet",
                     cssClass: 'btn-primary',
                     action: function(dialogItself){
                         
@@ -83,7 +83,7 @@ function checkPassphrase()
                 },
                 {
                     id: 'manual-btn',
-                    label: 'Enter Existing Passphrase',
+                    label: 'Import Existing',
                     cssClass: 'btn-secondary',
                     action: function(dialogItself){
                         

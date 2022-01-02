@@ -7,7 +7,7 @@ function getAddrArray(){
         var node = bitcoinjs.HDNode.fromSeedHex(m.toHex(), NETWORK)
         var addrArray = new Array()
 
-        for(var i=0;i < 6;i++){
+        for(var i=0;i < 10;i++){
             var child = node.deriveHardened(0)
               .derive(0)
               .derive(i)

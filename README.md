@@ -1,5 +1,5 @@
 # Freeport
-Cryptogoods Browser Extension (Counterparty/BTC)
+Bitcoin NFT Browser Extension (Powered by Counterparty)
 
 Compatible with Chrome and Firefox
 
@@ -55,3 +55,5 @@ v0.3.0 - Firefox compatibility
 v0.4.0 - UI overhaul
 
 v0.4.1 - Fix asset names, Digirare API update
+
+v0.5.0 - Upgrade to manifest 3

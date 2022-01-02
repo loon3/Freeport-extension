@@ -290,6 +290,10 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
 //function concatToStorage(storage_type, target, data){
 //    
 //    if(storage_type = "session"){

@@ -80,7 +80,8 @@ function getXchainBalances(address, callback){
 }
 
 function pageCollectInventoryXchain(address, data){
-
+    
+    var collectionHead = ""
     var collection = ""
     var collectionUnknown = ""
     var cardName, cardImage, isLongname, isLargeCollection, isEmptyCollection, cardDivisible, cardQty, collectionEntry, cardAlias, display_name, cardFreeport
@@ -90,9 +91,10 @@ function pageCollectInventoryXchain(address, data){
             //collection += "<div align='center' style='position: relative; top: -30px; background-color: #38444f; margin: 0 0 32px 0;'>My Collection</div>"
         
             
-            collection += "<h2>My Collection</h2>"
+            collectionHead += "<h2>My Collection</h2>"
             
-            collection += "<div align='right' style='margin: 0 0 0 0;'><input id='imageToggle' type='checkbox' data-toggle='toggle' data-on='Images On' data-off='Images Off' data-size='mini' data-width='100' data-height='20' data-onstyle='primary' data-offstyle='danger' checked></div>"
+            collectionHead += "<div align='right' style='margin: 0 0 0 0;'><input id='imageToggle' type='checkbox' data-toggle='toggle' data-on='Images On' data-off='Images Off' data-size='mini' data-width='100' data-height='20' data-onstyle='primary' data-offstyle='danger' checked></div>"
+            
             
 
             collection += "<div class='row' style='margin: 12px 0 0 0;'>"
@@ -113,6 +115,7 @@ function pageCollectInventoryXchain(address, data){
             var digirareImageArray = []
             var digirareCollectionArray = []
             var digirareCardArray = []
+            var collectionsAll = []
             
             if(data['data']){
                 var assetArrayLength = data['data'].length
@@ -143,25 +146,32 @@ function pageCollectInventoryXchain(address, data){
                 cardAlias = ""
                 cardFreeport = false
                 cardCollection = "none"
+                cardImage = "../images/unknown.png"
                 
                 if(digirareImageArray[cardName]){
                     cardImage = digirareImageArray[cardName]
-                    if(digirareCollectionArray[cardName] == "Freeport"){
-                        cardFreeport = true
-                        cardAlias = digirareCardArray[cardName]
-                    }
-                } else {
-                    cardImage = "../images/unknown.png"
-                    if(cardDescription.length >= 16){
-                        var checkImgur = cardDescription.substring(0, 5);
-                        if(checkImgur == "imgur"){
-                            cardFreeport = true
-                            var descArray = cardDescription.split(";")
-                            cardImage = "https://i.imgur.com/"+descArray[0].substring(6)
-                            cardAlias = descArray[1]
-                        }
-                    }
+//                    if(digirareCollectionArray[cardName] == "Freeport"){
+//                        cardFreeport = true
+//                        cardAlias = digirareCardArray[cardName]
+//                        console.log(cardAlias)
+//                    }
                 } 
+                    
+                if(cardDescription.length >= 16){
+                    var checkImgur = cardDescription.substring(0, 5);
+                    if(checkImgur == "imgur"){
+                        cardFreeport = true
+                        var descArray = cardDescription.split(";")
+                        cardImage = "https://i.imgur.com/"+descArray[0].substring(6)
+
+                        cardAlias = cardDescription.substring(cardDescription.indexOf(';')+1)
+                        //cardAlias = descArray[1]
+                        console.log(cardAlias)
+                    }
+                }
+
+//                
+                
                 
                 if(digirareCollectionArray[cardName]){
                     cardCollection = digirareCollectionArray[cardName]
@@ -179,13 +189,17 @@ function pageCollectInventoryXchain(address, data){
                     }  
                     cardAlias = display_name
                 }
-
+                
+                var cardCollectionVar = cardCollection.replace(/\s+/g, '-').toLowerCase();
+                
                 collectionEntry = ""
-                collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"' data-collection='"+cardCollection+"'>"
+                collectionEntry += "<div class='col-sm-6 col-md-4 col-lg-3 col-xl-2 collection-item-asset collection-"+cardCollectionVar+"' style='padding: 20px 0 16px 0' data-assetname='"+cardName+"' data-assetimage='"+cardImage+"' data-divisible='"+cardDivisible+"' data-quantity='"+cardQty+"' data-description='"+cardDescription+"' data-alias='"+cardAlias+"' data-collection='"+cardCollection+"' data-collection='"+cardCollection+"'>"
                 collectionEntry += "<div align='center' style='margin: auto;'><div class='lozad collection-asset-images' data-background-image='"+cardImage+"' style='width: 120px; height: 120px; background-size: contain; background-repeat: no-repeat; background-position: center bottom; margin-bottom: 8px;'></div>"
                 collectionEntry += "<div class='inventory-asset-name' style='font-weight: bold; padding: 0 8px 0 8px;'>"+display_name+"</div>"
                 collectionEntry += "<div class='inventory-asset-qty' style='font-size: 9pt; color: #fff; background-color: #000; margin: 5px 0 0 0; padding: 0 5px 0 5px; display: inline-block;'>x"+cardQty+"</div>"
                 collectionEntry += "</div></div>"
+                
+                collectionsAll.push(cardCollection)
 
                 //b3ffcc
                 if(cardImage != "../images/notrare.jpg"){
@@ -206,8 +220,33 @@ function pageCollectInventoryXchain(address, data){
             //collection += "</div></div>"
 
             collection += "</div>"
+        
 
-            $("#page-container-collect-content").html(collection)
+            var collectionsUnique = collectionsAll.filter(onlyUnique);
+            //console.log(collectionsUnique)
+            
+            var collectionsList = "<div style='margin-top:20px'>"
+        
+            for(var i=0; i < collectionsUnique.length; i++){
+                
+                if(collectionsUnique[i] !== "none"){
+                
+                    var collectionVar = (collectionsUnique[i]).replace(/\s+/g, '-').toLowerCase()
+                
+                    collectionsList += "<div align='left' style='margin: 0 20px 0 0; display: inline-block'><div class='form-check'><input class='form-check-input checkbox-collection-sort' id='checkbox-"+collectionVar+"' type='checkbox' checked><label class='form-check-label' for='checkbox-"+collectionVar+"'>"+collectionsUnique[i]+"</label></div></div>"
+                    
+                }
+                
+            }
+        
+            collectionsList += "<div align='left' style='margin: 0 20px 0 0; display: inline-block'><div class='form-check'><input class='form-check-input checkbox-collection-sort' id='checkbox-none' type='checkbox' checked><label class='form-check-label' for='checkbox-none'>none</label></div></div>"
+        
+            collectionsList += "</div>"
+        //collection += "<div align='left' style='margin: 0 0 0 0;'><div class='form-check form-switch'><input class='form-check-input' type='checkbox' id='flexSwitchCheckDefault'><label class='form-check-label' for='flexSwitchCheckDefault'>Collection Name</label></div></div>"
+        
+            var collectionPage = collectionHead + collectionsList + collection
+        
+            $("#page-container-collect-content").html(collectionPage)
 
             //const observer = lozad(); // lazy loads elements with default selector as '.lozad'
             observer.observe();
@@ -251,13 +290,23 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
     
     $.getJSON( source_html, function( data ) {
         
-        checkRegistry(data.issuer, function(registry){
+        var source_html = "https://xchain.io/api/issuances/"+assetname
+        
+        $.getJSON( source_html, function( data_issuances ) {
+            
+            var issuanceFirst = data_issuances.data.slice(-1)
+            console.log(issuanceFirst[0].timestamp)
+        
+            checkRegistry(data.issuer, function(registry){
             
             console.log(registry)
         
             checkAnchors(data.issuer, function(anchors){
             
                 imageToHash(assetimage, function(imageHashFromUrl){
+                    
+                    var assetIssueDate = new Date(issuanceFirst[0].timestamp*1000)
+                    var assetIssueBlock = issuanceFirst[0].block_index
 
                     if(assetalias.length > 0){
                         var assetname_display = decodeURIComponent(assetalias) + " <div style='font-size: 12px; color: #868e96;'>ID // <span style='color: #D3BDB0;'>" + assetname + "</span></div>"
@@ -297,6 +346,8 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
 
                     assetInfo += "<div style='font-size: 18px; font-weight: 300;'>Created By:"
                     assetInfo += twitterAlias 
+                    
+                    assetInfo += "<div style='font-size: 18px;font-weight: 300; margin: 20px 0 20px 0;'>Mint Date:<br><span style='font-weight: bold;'>"+assetIssueDate.toDateString()+" (Block "+assetIssueBlock+")</span></div>"
 
                     assetInfo += "</div>"
                     //assetInfo += "<div style='font-size: 18px; font-weight: 300; padding-top: 10px;'>Total Issued:<br><span style='font-weight: bold;'>"+data.supply+"</span></div>"
@@ -363,6 +414,8 @@ function pageCollectAsset(assetname, assetimage, assetdivisible, assetquantity, 
 
                 })
             })  
+        })
+        
         })
     })
     

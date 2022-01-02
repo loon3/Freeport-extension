@@ -66,6 +66,21 @@ $( document ).ready(function() {
         }
     }) 
     
+    $("#page-container-collect-content").on('change', 'input.checkbox-collection-sort', function(){ 
+        console.log($(this).is(":checked"))
+        
+        var getCollection = ($(this).attr("id")).slice(9)
+        
+        console.log(getCollection)
+        
+        if($(this).is(":checked")){
+            $(".collection-"+getCollection).show()
+        } else {
+            $(".collection-"+getCollection).hide()
+        }
+    }) 
+    
+    
     
     $("#page-container-collect-content").on('click', 'div.collection-item-asset', function(){ 
          
@@ -364,26 +379,28 @@ var getUrlParameter = function getUrlParameter(sParam) {
 }
 
 function ipfsInit(){
-    const IPFS = require('ipfs')
-    const Buffer = require('buffer').Buffer
-
-    const node = new IPFS({ repo: String(Math.random() + Date.now()) })
-    node.once('ready', () => {
-        console.log('IPFS node is ready')
-    })
+//    //const IPFS = require('Ipfs')
+//    const Buffer = require('buffer').Buffer
+//
+//    const node = new Ipfs({ repo: String(Math.random() + Date.now()) })
+//    node.once('ready', () => {
+//        console.log('IPFS node is ready')
+//    })
+//    
+//    node.on('ready', async () => {
+//      const version = await node.version()
+//
+//      console.log('Version:', version.version)
+//
+//      const filesAdded = await node.files.add({
+//        path: 'rarepepe.txt',
+//        content: Buffer.from('the rarest of all rares')
+//      })
+//
+//      console.log('Added file:', filesAdded[0].path, filesAdded[0].hash)
+//    })    
     
-    node.on('ready', async () => {
-      const version = await node.version()
-
-      console.log('Version:', version.version)
-
-      const filesAdded = await node.files.add({
-        path: 'rarepepe.txt',
-        content: Buffer.from('the rarest of all rares')
-      })
-
-      console.log('Added file:', filesAdded[0].path, filesAdded[0].hash)
-    })    
+  
 }
 
 function buttonSplash(){
