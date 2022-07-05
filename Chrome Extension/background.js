@@ -3,3 +3,4 @@ chrome.action.onClicked.addListener((reason) => {
       url: '../html/tab.html'
     });
 });
+

@@ -7,7 +7,7 @@
       "48": "images/icon-48-2.png"
    },
    "background": {
-      "service_worker": "js/background.js"
+      "service_worker": "background.js"
    },
    "action": {
       "default_icon": "images/icon-48-2.png"
