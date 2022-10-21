@@ -9,10 +9,6 @@ Compatible with Chrome and Firefox
 
 https://chrome.google.com/webstore/detail/freeport/hbggjmemphljoifppaekgpohndiinfeb
 
-## Install from Package (for Firefox users)
-
-https://github.com/loon3/Freeport-extension/raw/dev/packages/freeport-0.3.0-fx.xpi
-
 ## Install from Source
 
 #### Chrome
@@ -57,3 +53,5 @@ v0.4.0 - UI overhaul
 v0.4.1 - Fix asset names, Digirare API update
 
 v0.5.0 - Upgrade to manifest 3
+
+v0.5.1 - Fix issuance tx, update to current format
