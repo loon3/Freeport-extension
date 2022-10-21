@@ -146,10 +146,10 @@ function create_issuance_data_opreturn(asset, quantity, divisible, description) 
     
     if (divisible == true || divisible == "true") {
         var quantity_int = parseFloat(quantity).toFixed(8) * 100000000;
-        var divisible_hex = "01000000000000000000";
+        var divisible_hex = "010000"; // divisibility + lock + reset
     } else {
         var quantity_int = parseFloat(quantity); 
-        var divisible_hex = "00000000000000000000";
+        var divisible_hex = "000000"; // divisibility + lock + reset
     }
     
     quantity_int = Math.round(quantity_int);
@@ -160,7 +160,7 @@ function create_issuance_data_opreturn(asset, quantity, divisible, description) 
         if (description.length <= 41) {
 
             var cntrprty_prefix = "434e545250525459"; 
-            var trans_id = "00000014";
+            var trans_id = "14";
 
             var descriptionlength = description.length;
             var descriptionlength_hex = padprefix(descriptionlength.toString(16),2);
@@ -173,7 +173,7 @@ function create_issuance_data_opreturn(asset, quantity, divisible, description) 
 
             var description_hex = bin2hex(description);
 
-            var issuance_tx_data = cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
+            var issuance_tx_data = cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + description_hex;
             
             console.log(issuance_tx_data.length);
 
@@ -262,10 +262,10 @@ function create_issuance_data(assetid, quantity, divisible, description) {
     
     if (divisible == true || divisible == "true") {
         var quantity_int = parseFloat(quantity).toFixed(8) * 100000000;
-        var divisible_hex = "01000000000000000000";
+        var divisible_hex = "01";
     } else {
         var quantity_int = parseFloat(quantity); 
-        var divisible_hex = "00000000000000000000";
+        var divisible_hex = "00";
     }
     
     quantity_int = Math.round(quantity_int);
@@ -299,7 +299,7 @@ function create_issuance_data(assetid, quantity, divisible, description) {
             var description_hex_short = bin2hex(description);
             var description_hex = padtrail(description_hex_short, 44);
 
-            var issuance_tx_data = initiallength_hex + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
+            var issuance_tx_data = initiallength + cntrprty_prefix + trans_id + assetid_hex + quantity_hex + divisible_hex + descriptionlength_hex + description_hex;
 
             return issuance_tx_data;
 
